@@ -11,7 +11,7 @@ const Banner = () => {
     const images = [bannerImg1, bannerImg2, bannerImg3, bannerImg4];
 
     return (
-        <div className="w-full md:h-[450px] h-[250px] rounded-xl overflow-hidden shadow-lg">
+        <div className="w-full md:h-[450px] h-[250px] my-10 rounded-xl overflow-hidden shadow-lg">
             <Carousel
                 autoPlay={true}
                 infiniteLoop={true}
