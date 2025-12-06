@@ -1,5 +1,7 @@
 import Banner from "./Banner";
 import Features from "./Features";
+import HowItWorks from "./HowItWorks";
+import WhyChooseUs from "./WhyChooseUs";
 
 const Home = () => {
   return (
@@ -8,6 +10,8 @@ const Home = () => {
       <p className="mt-2 text-gray-600">Your city's issue reporting platform.</p>
       <Banner></Banner>
       <Features></Features>
+      <WhyChooseUs></WhyChooseUs>
+      <HowItWorks></HowItWorks>
     </div>
     
   );
