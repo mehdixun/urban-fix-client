@@ -19,7 +19,7 @@ const Navbar = ({ user }) => {
           <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
             <li><NavLink to="/">Home</NavLink></li>
             <li><NavLink to="/all-issues">All Issues</NavLink></li>
-            <li><NavLink to="/extra1">Extra1</NavLink></li>
+            <li><NavLink to="/about-us">About Us</NavLink></li>
             <li><NavLink to="/extra2">Extra2</NavLink></li>
           </ul>
         </div>
@@ -40,10 +40,10 @@ const Navbar = ({ user }) => {
             <NavLink to="/all-issues" className={({isActive}) => isActive ? "text-primary font-semibold" : ""}>All Issues</NavLink>
           </li>
           <li>
-            <NavLink to="/extra1" className={({isActive}) => isActive ? "text-primary font-semibold" : ""}>Extra1</NavLink>
+            <NavLink to="/about-us" className={({isActive}) => isActive ? "text-primary font-semibold" : ""}>About Us</NavLink>
           </li>
           <li>
-            <NavLink to="/extra2" className={({isActive}) => isActive ? "text-primary font-semibold" : ""}>Extra2</NavLink>
+            <NavLink to="/service-area" className={({isActive}) => isActive ? "text-primary font-semibold" : ""}>Service Area</NavLink>
           </li>
         </ul>
       </div>

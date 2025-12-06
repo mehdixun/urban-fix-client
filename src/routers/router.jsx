@@ -5,6 +5,8 @@ import Home from "../pages/Home";
 import Login from "../pages/login";
 import Register from "../pages/Register";
 import ErrorPage from "../pages/ErrorPage";
+import AboutUs from "../pages/AboutUs";
+import ServiceAreas from "../pages/ServiceAreas";
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +25,15 @@ export const router = createBrowserRouter([
         {
             path: 'register',
             element: <Register></Register>
+        },
+        {
+          path: 'about-us',
+          element: <AboutUs></AboutUs>
+        },
+        {
+          path: 'service-area',
+          element: <ServiceAreas></ServiceAreas>,
+          loader: () => fetch('/coveragemaps.json').then(res=> res.json())
         }
     ]
   },

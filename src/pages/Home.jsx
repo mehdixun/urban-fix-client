@@ -1,6 +1,7 @@
 import Banner from "./Banner";
 import Features from "./Features";
 import HowItWorks from "./HowItWorks";
+import Testimonials from "./Testimonials";
 import WhyChooseUs from "./WhyChooseUs";
 
 const Home = () => {
@@ -12,6 +13,7 @@ const Home = () => {
       <Features></Features>
       <WhyChooseUs></WhyChooseUs>
       <HowItWorks></HowItWorks>
+      <Testimonials></Testimonials>
     </div>
     
   );

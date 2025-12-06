@@ -17,7 +17,7 @@ const Banner = () => {
                 infiniteLoop={true}
                 showThumbs={false}
                 showStatus={false}
-                interval={2000}
+                interval={3000}
                 stopOnHover={false}
             >
                 {images.map((img, index) => (
