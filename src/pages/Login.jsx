@@ -1,9 +1,25 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import UseAuth from "../hooks/UseAuth";
+import SocialLogin from "./SocialLogin";
 
 const Login = () => {
+  const {register, handleSubmit, formState: {errors}} = useForm();
+  const {signInUser} = UseAuth();
+
+  const handleLogin = (data) => {
+    console.log(data);
+    signInUser(data.email, data.password)
+    .then(result => {
+      console.log(result.user)
+    })
+    .catch(error => {
+      console.log(error)
+    })
+  }
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200 px-5">
+    <div onSubmit={handleSubmit(handleLogin)} className="min-h-screen flex items-center justify-center bg-base-200 px-5">
       <div className="w-full max-w-md bg-base-100 shadow-xl p-8 rounded-xl">
         
         <h1 className="text-3xl font-bold text-center mb-5">Welcome Back</h1>
@@ -16,6 +32,7 @@ const Login = () => {
             </label>
             <input
               type="email"
+              {...register('email')}
               placeholder="Enter your email"
               className="input input-bordered w-full"
               required
@@ -29,6 +46,7 @@ const Login = () => {
             </label>
             <input
               type="password"
+              {...register('password')}
               placeholder="Enter your password"
               className="input input-bordered w-full"
               required
@@ -54,11 +72,14 @@ const Login = () => {
         {/* No account */}
         <p className="text-center mt-4">
           Don’t have an account?{" "}
-          <Link to="/register" className="text-primary font-semibold hover:underline">
+          <Link to="/register" className="text-primary underline font-semibold hover:underline">
             Register
           </Link>
         </p>
+        <p className="text-center my-2 font-semibold">OR</p>
+        <SocialLogin></SocialLogin>
       </div>
+      
     </div>
   );
 };

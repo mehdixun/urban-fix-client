@@ -1,51 +1,82 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
+import UseAuth from "../hooks/UseAuth";
 
-const Navbar = ({ user }) => {
-  // user = null if not logged in; else object {displayName, photoURL, premium, etc.}
+const Navbar = ({ users }) => {
+  const {user, logout} = UseAuth();
+
+  const handleLogout = () => {
+    logout()
+    .then()
+    .catch(error => {
+      console.log(error)
+    })
+  }
+
+  const menuItems = [
+    { name: "Home", path: "/" },
+    { name: "All Issues", path: "/all-issues" },
+    { name: "About Us", path: "/about-us" },
+    { name: "Service Area", path: "/service-area" },
+  ];
+
+  const renderMenuItems = (isMobile = false) =>
+    menuItems.map((item, idx) => (
+      <li key={idx}>
+        <NavLink
+          to={item.path}
+          className={({ isActive }) =>
+            isActive
+              ? "bg-blue-500 text-white font-bold border-primary"
+              : isMobile
+              ? "hover:text-primary"
+              : "hover:border-primary transition"
+          }
+        >
+          {item.name}
+        </NavLink>
+      </li>
+    ));
 
   return (
-    <div className="navbar bg-base-100 shadow-md px-4 py-2">
-      
+    <nav className="navbar bg-base-100 shadow-md px-4 py-3 sticky top-0 z-50">
       {/* Navbar Start */}
       <div className="navbar-start">
-        {/* Mobile dropdown */}
+        {/* Mobile Dropdown */}
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-ghost lg:hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             </svg>
           </label>
-          <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-            <li><NavLink to="/">Home</NavLink></li>
-            <li><NavLink to="/all-issues">All Issues</NavLink></li>
-            <li><NavLink to="/about-us">About Us</NavLink></li>
-            <li><NavLink to="/extra2">Extra2</NavLink></li>
+          <ul
+            tabIndex={0}
+            className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+          >
+            {renderMenuItems(true)}
           </ul>
         </div>
 
         {/* Logo */}
-        <Link to="/" className="btn btn-ghost normal-case text-xl font-bold text-primary">
+        <Link to="/" className="text-3xl font-bold text-primary">
           UrbanFix
         </Link>
       </div>
 
-      {/* Navbar Center (Desktop menu) */}
+      {/* Navbar Center (Desktop Menu) */}
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1 gap-2">
-          <li>
-            <NavLink to="/" className={({isActive}) => isActive ? "text-primary font-semibold" : ""}>Home</NavLink>
-          </li>
-          <li>
-            <NavLink to="/all-issues" className={({isActive}) => isActive ? "text-primary font-semibold" : ""}>All Issues</NavLink>
-          </li>
-          <li>
-            <NavLink to="/about-us" className={({isActive}) => isActive ? "text-primary font-semibold" : ""}>About Us</NavLink>
-          </li>
-          <li>
-            <NavLink to="/service-area" className={({isActive}) => isActive ? "text-primary font-semibold" : ""}>Service Area</NavLink>
-          </li>
-        </ul>
+        <ul className="menu menu-horizontal px-1 gap-4">{renderMenuItems()}</ul>
       </div>
 
       {/* Navbar End */}
@@ -54,24 +85,44 @@ const Navbar = ({ user }) => {
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-                <img src={user.photoURL || "/default-avatar.png"} alt="profile"/>
+                <img src={user.photoURL || "/default-avatar.png"} alt="profile" />
               </div>
             </label>
-            <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-3">
-              <li><span className="font-semibold">{user.displayName || "User"}</span></li>
-              {user.premium && <li><span className="badge badge-primary">Premium</span></li>}
-              <li><NavLink to="/dashboard">Dashboard</NavLink></li>
-              <li><button>Logout</button></li>
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-3"
+            >
+              <li>
+                <span className="font-bold text-center">{user.displayName || "User"}</span>
+              </li>
+              {user.premium && (
+                <li>
+                  <span className="badge badge-primary">Premium</span>
+                </li>
+              )}
+              <li>
+                <NavLink to="/dashboard">Dashboard</NavLink>
+              </li>
+              <li>
+                <button onClick={handleLogout} className="w-full text-left">Logout</button>
+              </li>
             </ul>
+            <button onClick={handleLogout} className="btn btn-primary mx-5">
+              Log Out
+            </button>
           </div>
+          
         ) : (
           <div className="flex gap-2">
-            <NavLink to="/login" className="btn btn-primary">Login</NavLink>
-            <NavLink to="/register" className="btn btn-secondary">Register</NavLink>
+            
+            <NavLink to="/login" className="btn btn-primary">
+              Login
+            </NavLink>
+            
           </div>
         )}
       </div>
-    </div>
+    </nav>
   );
 };
 

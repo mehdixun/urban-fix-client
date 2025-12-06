@@ -12,7 +12,7 @@ const FlyToLocation = ({ coords }) => {
   return null;
 };
 
-const Coverage = () => {
+const ServiceAreas = () => {
   const defaultPosition = [23.685, 90.3563]; // Center of Bangladesh
   const serviceAreas = useLoaderData() || [];
   const [searchCoords, setSearchCoords] = useState(null);
@@ -105,4 +105,4 @@ const Coverage = () => {
   );
 };
 
-export default Coverage;
+export default ServiceAreas;

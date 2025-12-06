@@ -7,6 +7,8 @@ import Register from "../pages/Register";
 import ErrorPage from "../pages/ErrorPage";
 import AboutUs from "../pages/AboutUs";
 import ServiceAreas from "../pages/ServiceAreas";
+import Allissues from "../pages/AllIssues";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +31,12 @@ export const router = createBrowserRouter([
         {
           path: 'about-us',
           element: <AboutUs></AboutUs>
+        },
+        {
+          path: '/all-issues',
+          element: <PrivateRoute>
+          <Allissues></Allissues>
+          </PrivateRoute>
         },
         {
           path: 'service-area',
