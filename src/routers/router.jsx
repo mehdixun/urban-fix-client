@@ -34,9 +34,8 @@ export const router = createBrowserRouter([
         },
         {
           path: '/all-issues',
-          element: <PrivateRoute>
+          element: 
           <Allissues></Allissues>
-          </PrivateRoute>
         },
         {
           path: 'service-area',
