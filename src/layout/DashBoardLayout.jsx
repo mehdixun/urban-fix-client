@@ -33,7 +33,9 @@ const DashBoardLayout = () => {
           </Link>
         </li>
         
-        <NavLink to='/dashboard/my-issues'>My Issues</NavLink>
+        <button className='bg-indigo-500 rounded'>
+            <NavLink to='/dashboard/my-issues'>My Issues</NavLink>
+        </button>
         {/* List item */}
         <li>
           <button className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Settings">
