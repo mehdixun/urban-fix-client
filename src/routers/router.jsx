@@ -9,6 +9,7 @@ import AboutUs from "../pages/AboutUs";
 import ServiceAreas from "../pages/ServiceAreas";
 import Allissues from "../pages/AllIssues";
 import PrivateRoute from "./PrivateRoute";
+import IssueDetails from "../pages/IssueDetails";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
           path: '/all-issues',
           element: 
           <Allissues></Allissues>
+        },
+        {
+          path: '/issue/:id',
+          element: <IssueDetails></IssueDetails>
         },
         {
           path: 'service-area',

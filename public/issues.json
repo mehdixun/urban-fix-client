@@ -2,7 +2,7 @@
   {
     "id": 1,
     "title": "Broken Street Light Near School",
-    "image": "https://i.ibb.co/vQmY0fV/street-light.jpg",
+    "image": "https://i.ibb.co.com/R4STyPfF/light.jpg",
     "category": "Electricity",
     "status": "Pending",
     "priority": "High",
@@ -14,7 +14,7 @@
   {
     "id": 2,
     "title": "Water Pipe Leakage in Road",
-    "image": "https://i.ibb.co/KGzQpmq/water-leak.jpg",
+    "image": "https://i.ibb.co.com/7x9ph8D4/water-pipe.jpg",
     "category": "Water Supply",
     "status": "In Progress",
     "priority": "Normal",
@@ -26,7 +26,7 @@
   {
     "id": 3,
     "title": "Large Pothole in Main Road",
-    "image": "https://i.ibb.co/8KkjR2p/pothole.jpg",
+    "image": "https://i.ibb.co.com/sdD2LRyQ/road-damage.jpg",
     "category": "Road",
     "status": "Pending",
     "priority": "High",
@@ -38,7 +38,7 @@
   {
     "id": 4,
     "title": "Garbage Not Collected for 3 Days",
-    "image": "https://i.ibb.co/hY2y3yf/garbage.jpg",
+    "image": "https://i.ibb.co.com/x8YBt5n6/garbage.jpg",
     "category": "Cleanliness",
     "status": "Resolved",
     "priority": "Normal",
@@ -54,7 +54,7 @@
     "status": "Pending",
     "priority": "High",
     "location": "Gulshan 1, Dhaka",
-    "image": "https://via.placeholder.com/400x200?text=Streetlight",
+    "image": "https://i.ibb.co.com/2mv2RNv/strret-light.jpg",
     "upvotes": 12,
     "postedBy": "user1@example.com",
     "upvotedUsers": ["user2@example.com"]
@@ -66,7 +66,7 @@
     "status": "In Progress",
     "priority": "Normal",
     "location": "Banani, Dhaka",
-    "image": "https://via.placeholder.com/400x200?text=Water+Leak",
+    "image": "https://i.ibb.co.com/mFzNcg7k/water-lecekage.jpg",
     "upvotes": 7,
     "postedBy": "user2@example.com",
     "upvotedUsers": []
@@ -78,7 +78,7 @@
     "status": "Resolved",
     "priority": "High",
     "location": "Mirpur 10, Dhaka",
-    "image": "https://via.placeholder.com/400x200?text=Pothole",
+    "image": "https://i.ibb.co.com/xSFgTVQq/pathole.jpg",
     "upvotes": 20,
     "postedBy": "user3@example.com",
     "upvotedUsers": ["user1@example.com"]
@@ -90,7 +90,7 @@
     "status": "Pending",
     "priority": "High",
     "location": "Dhanmondi, Dhaka",
-    "image": "https://via.placeholder.com/400x200?text=Power+Outage",
+    "image": "https://i.ibb.co.com/fY4rdqk3/power-otage.jpg",
     "upvotes": 5,
     "postedBy": "user4@example.com",
     "upvotedUsers": []
@@ -102,7 +102,7 @@
     "status": "Resolved",
     "priority": "Normal",
     "location": "Uttara, Dhaka",
-    "image": "https://via.placeholder.com/400x200?text=Broken+Tap",
+    "image": "https://i.ibb.co.com/TxQFycPB/broken-tapd.jpg",
     "upvotes": 10,
     "postedBy": "user5@example.com",
     "upvotedUsers": ["user2@example.com"]
@@ -114,7 +114,7 @@
     "status": "In Progress",
     "priority": "High",
     "location": "Motijheel, Dhaka",
-    "image": "https://via.placeholder.com/400x200?text=Flooding",
+    "image": "https://i.ibb.co.com/gLknRYVx/street-floaing.jpg",
     "upvotes": 15,
     "postedBy": "user6@example.com",
     "upvotedUsers": ["user1@example.com"]
@@ -126,7 +126,7 @@
     "status": "Pending",
     "priority": "High",
     "location": "Farmgate, Dhaka",
-    "image": "https://via.placeholder.com/400x200?text=Traffic+Signal",
+    "image": "https://i.ibb.co.com/0RQRZRnh/traffic-light.jpg",
     "upvotes": 8,
     "postedBy": "user7@example.com",
     "upvotedUsers": []
@@ -138,7 +138,7 @@
     "status": "In Progress",
     "priority": "Normal",
     "location": "Pallabi, Dhaka",
-    "image": "https://via.placeholder.com/400x200?text=Leaking+Pipe",
+    "image": "https://i.ibb.co.com/wrN9Fhqd/pipe-lekhage.jpg",
     "upvotes": 4,
     "postedBy": "user8@example.com",
     "upvotedUsers": []
@@ -150,7 +150,7 @@
     "status": "Pending",
     "priority": "Normal",
     "location": "Mirpur 1, Dhaka",
-    "image": "https://via.placeholder.com/400x200?text=Broken+Footpath",
+    "image": "https://i.ibb.co.com/SwrqDhcz/footpath.jpg",
     "upvotes": 6,
     "postedBy": "user9@example.com",
     "upvotedUsers": ["user3@example.com"]
@@ -162,7 +162,7 @@
     "status": "Resolved",
     "priority": "Normal",
     "location": "Tejgaon, Dhaka",
-    "image": "https://via.placeholder.com/400x200?text=Flickering+Streetlight",
+    "image": "https://i.ibb.co.com/TMzc5Zz5/blinking.jpg",
     "upvotes": 11,
     "postedBy": "user10@example.com",
     "upvotedUsers": ["user1@example.com", "user2@example.com"]
@@ -174,7 +174,7 @@
     "status": "In Progress",
     "priority": "High",
     "location": "Banani, Dhaka",
-    "image": "https://via.placeholder.com/400x200?text=Drain+Blockage",
+    "image": "https://i.ibb.co.com/6dFx9DT/drain.jpg",
     "upvotes": 9,
     "postedBy": "user11@example.com",
     "upvotedUsers": ["user5@example.com"]
@@ -186,7 +186,7 @@
     "status": "Pending",
     "priority": "Normal",
     "location": "Uttara, Dhaka",
-    "image": "https://via.placeholder.com/400x200?text=Bus+Stop",
+    "image": "https://i.ibb.co.com/39gdWY6S/bus-stop-broken.jpg",
     "upvotes": 3,
     "postedBy": "user12@example.com",
     "upvotedUsers": []
@@ -198,7 +198,7 @@
     "status": "Pending",
     "priority": "High",
     "location": "Mirpur 12, Dhaka",
-    "image": "https://via.placeholder.com/400x200?text=Contamination",
+    "image": "https://i.ibb.co.com/MDPQ80pR/water-report.jpg",
     "upvotes": 14,
     "postedBy": "user13@example.com",
     "upvotedUsers": ["user2@example.com"]
@@ -210,7 +210,7 @@
     "status": "Resolved",
     "priority": "Normal",
     "location": "Dhanmondi, Dhaka",
-    "image": "https://via.placeholder.com/400x200?text=Graffiti",
+    "image": "https://i.ibb.co.com/YFqV3CsK/strret-grafity.jpg",
     "upvotes": 2,
     "postedBy": "user14@example.com",
     "upvotedUsers": []
@@ -222,7 +222,7 @@
     "status": "In Progress",
     "priority": "High",
     "location": "Farmgate, Dhaka",
-    "image": "https://via.placeholder.com/400x200?text=Traffic+Lights",
+    "image": "https://i.ibb.co.com/0RQRZRnh/traffic-light.jpg",
     "upvotes": 13,
     "postedBy": "user15@example.com",
     "upvotedUsers": ["user3@example.com"]
@@ -234,9 +234,29 @@
     "status": "Pending",
     "priority": "Normal",
     "location": "Mirpur 10, Dhaka",
-    "image": "https://via.placeholder.com/400x200?text=Garbage+Bin",
+    "image": "https://i.ibb.co.com/fGTnpzqN/overflow-bin.jpg",
     "upvotes": 6,
     "postedBy": "user16@example.com",
     "upvotedUsers": []
   }
 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
