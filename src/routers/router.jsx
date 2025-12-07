@@ -10,6 +10,9 @@ import ServiceAreas from "../pages/ServiceAreas";
 import Allissues from "../pages/AllIssues";
 import PrivateRoute from "./PrivateRoute";
 import IssueDetails from "../pages/IssueDetails";
+import DashBoardLayout from "../layout/DashBoardLayout";
+import MyIssues from "../pages/MyIssues";
+import CreateIssue from "../pages/CreateIssue";
 
 export const router = createBrowserRouter([
   {
@@ -39,8 +42,25 @@ export const router = createBrowserRouter([
           <Allissues></Allissues>
         },
         {
+          path: '/create-issue',
+          element: 
+          <CreateIssue></CreateIssue>
+        },
+        {
           path: '/issue/:id',
           element: <IssueDetails></IssueDetails>
+        },
+        {
+          path: 'dashboard',
+          element: <PrivateRoute>
+            <DashBoardLayout></DashBoardLayout>
+          </PrivateRoute>,
+          children:[
+            {
+              path: 'my-issues',
+              element: <MyIssues></MyIssues>
+            }
+          ]
         },
         {
           path: 'service-area',

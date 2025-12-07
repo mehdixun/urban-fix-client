@@ -2,22 +2,22 @@ import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import UseAuth from "../hooks/UseAuth";
 
-const Navbar = ({ users }) => {
-  const {user, logout} = UseAuth();
+const Navbar = () => {
+  const { user, logout } = UseAuth();
 
   const handleLogout = () => {
     logout()
-    .then()
-    .catch(error => {
-      console.log(error)
-    })
-  }
+      .then(() => {})
+      .catch((error) => console.log(error));
+  };
 
   const menuItems = [
-    { name: "Home", path: "/" },
-    { name: "All Issues", path: "/all-issues" },
-    { name: "About Us", path: "/about-us" },
-    { name: "Service Area", path: "/service-area" },
+    { name: "Home", path: "/", end: true },
+    { name: "All Issues", path: "/all-issues", end: true },
+    ...(user ? [{ name: "Create A Issue", path: "/create-issue", end: true }] : []),
+    ...(user ? [{ name: "Dashboard", path: "/dashboard", end: true }] : []),
+    { name: "Service Area", path: "/service-area", end: true },
+     { name: "About Us", path: "/about-us", end: true },
   ];
 
   const renderMenuItems = (isMobile = false) =>
@@ -25,6 +25,7 @@ const Navbar = ({ users }) => {
       <li key={idx}>
         <NavLink
           to={item.path}
+          end={item.end}
           className={({ isActive }) =>
             isActive
               ? "bg-blue-500 text-white font-bold border-primary"
@@ -40,9 +41,7 @@ const Navbar = ({ users }) => {
 
   return (
     <nav className="navbar bg-base-100 shadow-md px-4 py-3 sticky top-0 z-50">
-      {/* Navbar Start */}
       <div className="navbar-start">
-        {/* Mobile Dropdown */}
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-ghost lg:hidden">
             <svg
@@ -52,12 +51,7 @@ const Navbar = ({ users }) => {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </label>
           <ul
@@ -68,18 +62,15 @@ const Navbar = ({ users }) => {
           </ul>
         </div>
 
-        {/* Logo */}
         <Link to="/" className="text-3xl font-bold text-primary">
           UrbanFix
         </Link>
       </div>
 
-      {/* Navbar Center (Desktop Menu) */}
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 gap-4">{renderMenuItems()}</ul>
       </div>
 
-      {/* Navbar End */}
       <div className="navbar-end">
         {user ? (
           <div className="dropdown dropdown-end">
@@ -101,24 +92,25 @@ const Navbar = ({ users }) => {
                 </li>
               )}
               <li>
-                <NavLink to="/dashboard">Dashboard</NavLink>
+                <NavLink to="/dashboard" end>
+                  Dashboard
+                </NavLink>
               </li>
               <li>
-                <button onClick={handleLogout} className="w-full text-left">Logout</button>
+                <button onClick={handleLogout} className="w-full text-left">
+                  Logout
+                </button>
               </li>
             </ul>
             <button onClick={handleLogout} className="btn btn-primary mx-5">
               Log Out
             </button>
           </div>
-          
         ) : (
           <div className="flex gap-2">
-            
             <NavLink to="/login" className="btn btn-primary">
               Login
             </NavLink>
-            
           </div>
         )}
       </div>
