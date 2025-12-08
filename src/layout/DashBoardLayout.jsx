@@ -1,55 +1,121 @@
 import React from 'react';
-import { Link, NavLink, Outlet } from 'react-router';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 
 const DashBoardLayout = () => {
-    return (
-        <div>
-            <div className="drawer lg:drawer-open">
-  <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
-  <div className="drawer-content">
-    {/* Navbar */}
-    <nav className="navbar w-full bg-base-300">
-      <label htmlFor="my-drawer-4" aria-label="open sidebar" className="btn btn-square btn-ghost">
-        {/* Sidebar toggle icon */}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor" className="my-1.5 inline-block size-4"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path><path d="M9 4v16"></path><path d="M14 10l2 2l-2 2"></path></svg>
-      </label>
-      <div className="px-4">My Dashboard</div>
-    </nav>
-    {/* Page content here */}
-    <Outlet></Outlet>
-  </div>
+  return (
+    <div className="drawer lg:drawer-open">
+      <input id="my-drawer" type="checkbox" className="drawer-toggle" />
 
-  <div className="drawer-side is-drawer-close:overflow-visible">
-    <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
-    <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
-      {/* Sidebar content here */}
-      <ul className="menu w-full grow">
-        {/* List item */}
-        <li>
-          <Link to='/' className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Homepage">
-            {/* Home icon */}
-            <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor" className="my-1.5 inline-block size-4"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
-            <span className="is-drawer-close:hidden">Homepage</span>
-          </Link>
-        </li>
-        
-        <button className='bg-indigo-500 rounded'>
-            <NavLink to='/dashboard/my-issues'>My Issues</NavLink>
-        </button>
-        {/* List item */}
-        <li>
-          <button className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Settings">
-            {/* Settings icon */}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor" className="my-1.5 inline-block size-4"><path d="M20 7h-9"></path><path d="M14 17H5"></path><circle cx="17" cy="17" r="3"></circle><circle cx="7" cy="7" r="3"></circle></svg>
-            <span className="is-drawer-close:hidden">Settings</span>
-          </button>
-        </li>
-      </ul>
+      {/* Main Content */}
+      <div className="drawer-content flex flex-col min-h-screen bg-base-100">
+        {/* Navbar */}
+        <nav className="navbar bg-base-300 shadow-md px-4 lg:px-8">
+          <div className="flex-none lg:hidden">
+            <label htmlFor="my-drawer" className="btn btn-square btn-ghost">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="2"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </label>
+          </div>
+          <div className="flex-1 px-2 text-xl font-semibold">My Dashboard</div>
+        </nav>
+
+        {/* Page Content */}
+        <main className="p-6">
+          <Outlet />
+        </main>
+      </div>
+
+      {/* Sidebar */}
+      <div className="drawer-side">
+        <label htmlFor="my-drawer" className="drawer-overlay"></label>
+        <aside className="w-64 bg-base-200 min-h-screen flex flex-col">
+          <div className="p-4 text-lg font-bold border-b border-base-300">Menu</div>
+          <ul className="menu p-4 flex-1 space-y-2">
+            <li>
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-indigo-500 hover:text-white transition ${
+                    isActive ? 'bg-indigo-500 text-white' : 'text-base-content'
+                  }`
+                }
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6" />
+                </svg>
+                Homepage
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink
+                to="/dashboard/my-issues"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-indigo-500 hover:text-white transition ${
+                    isActive ? 'bg-indigo-500 text-white' : 'text-base-content'
+                  }`
+                }
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                My Issues
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink
+                to="/dashboard/settings"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-indigo-500 hover:text-white transition ${
+                    isActive ? 'bg-indigo-500 text-white' : 'text-base-content'
+                  }`
+                }
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Settings
+              </NavLink>
+            </li>
+          </ul>
+
+          <div className="p-4 border-t border-base-300">
+            <button className="btn w-full btn-outline btn-primary">Logout</button>
+          </div>
+        </aside>
+      </div>
     </div>
-  </div>
-</div>
-        </div>
-    );
+  );
 };
 
 export default DashBoardLayout;

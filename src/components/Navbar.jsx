@@ -16,7 +16,6 @@ const Navbar = () => {
     { name: "All Issues", path: "/all-issues", end: true },
     ...(user ? [{ name: "Create A Issue", path: "/create-issue", end: true }] : []),
     ...(user ? [{ name: "Dashboard", path: "/dashboard", end: true }] : []),
-    { name: "Service Area", path: "/service-area", end: true },
      { name: "About Us", path: "/about-us", end: true },
   ];
 

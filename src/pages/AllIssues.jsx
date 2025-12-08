@@ -1,13 +1,12 @@
-// src/pages/AllIssues.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import UseAuth from "../hooks/UseAuth";
 
-const API_BASE = "http://localhost:3000"; // change if needed
+const API_BASE = "http://localhost:3000";
 
 const AllIssues = () => {
-  const { user } = UseAuth(); // আপনার hook থেকে user object (email etc.)
+  const { user } = UseAuth();
   const navigate = useNavigate();
 
   const [issues, setIssues] = useState([]);
@@ -18,7 +17,6 @@ const AllIssues = () => {
   const [status, setStatus] = useState("");
   const [priority, setPriority] = useState("");
 
-  // fetch issues once
   useEffect(() => {
     fetchIssues();
   }, []);
@@ -32,7 +30,6 @@ const AllIssues = () => {
     }
   };
 
-  // sorting + boosting: High first, then by upvotes desc
   const sortBoosted = (arr) =>
     [...arr].sort((a, b) => {
       if (a.priority === "High" && b.priority !== "High") return -1;
@@ -40,7 +37,6 @@ const AllIssues = () => {
       return (b.upvotes || 0) - (a.upvotes || 0);
     });
 
-  // apply filters & sorting
   const applyFilters = (list) => {
     let data = [...list];
 
@@ -56,26 +52,25 @@ const AllIssues = () => {
     if (status) data = data.filter((i) => i.status === status);
     if (priority) data = data.filter((i) => i.priority === priority);
 
+    // Role based filtering
+    if (user?.role === "staff") {
+      data = data.filter((i) => i.assignedStaff?.email === user.email);
+    }
+
     return sortBoosted(data);
   };
 
-  // whenever issues or filter inputs change -> update filtered
   useEffect(() => {
     setFiltered(applyFilters(issues));
-  }, [issues, search, category, status, priority]);
+  }, [issues, search, category, status, priority, user]);
 
-  // optimistic toggle upvote
   const handleUpvote = async (issue) => {
-    // not logged in -> redirect
     if (!user?.email) return navigate("/login");
-
-    // cannot upvote own issue
     if (issue.postedBy === user.email) {
-      alert("তুমি নিজের পোস্টে upvote দিতে পারবে না।");
+      alert("You cannot upvote your own issue.");
       return;
     }
 
-    // create optimistic updated copy
     const already = issue.upvotedUsers?.includes(user.email);
     const optimisticIssue = {
       ...issue,
@@ -85,33 +80,26 @@ const AllIssues = () => {
         : [...(issue.upvotedUsers || []), user.email],
     };
 
-    // update local issues & filtered instantly
     const updatedIssues = issues.map((i) =>
       i._id === optimisticIssue._id ? optimisticIssue : i
     );
     setIssues(updatedIssues);
     setFiltered(applyFilters(updatedIssues));
 
-    // send request, if fails -> rollback
     try {
       const res = await axios.patch(
         `${API_BASE}/issues/toggle-upvote/${issue._id}`,
         { email: user.email }
       );
-
       const serverIssue = res.data;
-      // replace with server's canonical doc (to avoid mismatch)
       const synced = updatedIssues.map((i) =>
         i._id === serverIssue._id ? serverIssue : i
       );
       setIssues(synced);
       setFiltered(applyFilters(synced));
     } catch (err) {
-      console.error("Toggle upvote failed:", err);
-      alert(err.response?.data?.message || "Upvote failed. Try again.");
-
-      // rollback to original server data (refetch single issue or all)
-      // simplest: refetch all
+      console.error(err);
+      alert(err.response?.data?.message || "Upvote failed");
       fetchIssues();
     }
   };
@@ -129,7 +117,6 @@ const AllIssues = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-
         <select
           className="select select-bordered"
           value={category}
@@ -141,7 +128,6 @@ const AllIssues = () => {
           <option>Road</option>
           <option>Cleanliness</option>
         </select>
-
         <select
           className="select select-bordered"
           value={status}
@@ -149,11 +135,10 @@ const AllIssues = () => {
         >
           <option value="">Status</option>
           <option>Pending</option>
-          <option>In Progress</option>
+          <option>In-Progress</option>
           <option>Resolved</option>
           <option>Closed</option>
         </select>
-
         <select
           className="select select-bordered"
           value={priority}
@@ -165,7 +150,7 @@ const AllIssues = () => {
         </select>
       </div>
 
-      {/* Cards */}
+      {/* Issue Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filtered.map((issue) => {
           const alreadyUpvoted = issue.upvotedUsers?.includes(user?.email);
@@ -200,21 +185,34 @@ const AllIssues = () => {
                 <p className="text-gray-600 mt-2">{issue.location}</p>
 
                 <div className="flex items-center justify-between mt-4">
-                  <button
-                    onClick={() => handleUpvote(issue)}
-                    className={`btn btn-sm ${
-                      alreadyUpvoted ? "btn-success text-white" : "btn-outline"
-                    }`}
-                  >
-                    👍 {issue.upvotes || 0}
-                  </button>
+                  {/* ✅ Upvote button always shows for citizen */}
+                  {(!user?.role || user?.role === "citizen") && (
+                    <button
+                      onClick={() => handleUpvote(issue)}
+                      className={`btn btn-sm ${
+                        alreadyUpvoted ? "btn-success text-white" : "btn-outline"
+                      }`}
+                      disabled={issue.postedBy === user.email}
+                    >
+                      👍 {issue.upvotes || 0}
+                    </button>
+                  )}
 
                   <Link to={`/issue/${issue._id}`} className="btn btn-sm btn-primary">
                     View Details
                   </Link>
+
+                  {user?.role === "admin" && (
+                    <Link
+                      to={`/dashboard/edit-issue/${issue._id}`}
+                      className="btn btn-sm btn-warning"
+                    >
+                      ✏️ Edit / Assign
+                    </Link>
+                  )}
                 </div>
 
-                {alreadyUpvoted && (
+                {alreadyUpvoted && (!user?.role || user?.role === "citizen") && (
                   <p className="text-green-600 text-xs mt-2">You upvoted ✔</p>
                 )}
               </div>
