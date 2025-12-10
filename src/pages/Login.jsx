@@ -1,85 +1,83 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UseAuth from "../hooks/UseAuth";
-import SocialLogin from "./SocialLogin";
+import axios from "axios";
+import Swal from "sweetalert2";
+import SocialLogin from "../pages/SocialLogin";
 
 const Login = () => {
-  const {register, handleSubmit, formState: {errors}} = useForm();
-  const {signInUser} = UseAuth();
+  const { register, handleSubmit } = useForm();
+  const { signInUser } = UseAuth();
+  const navigate = useNavigate();
 
-  const handleLogin = (data) => {
-    console.log(data);
-    signInUser(data.email, data.password)
-    .then(result => {
-      console.log(result.user)
-    })
-    .catch(error => {
-      console.log(error)
-    })
-  }
+  const handleLogin = async (data) => {
+    Swal.fire({
+      title: "Logging in...",
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
+
+    try {
+      // 1️⃣ Firebase login
+      const user = await signInUser(data.email, data.password);
+
+      try {
+        // 2️⃣ Backend JWT
+        const jwtRes = await axios.post("http://localhost:3000/jwt", { email: user.email });
+        localStorage.setItem("token", jwtRes.data.token);
+      } catch (jwtErr) {
+        console.error("JWT error:", jwtErr);
+        Swal.fire({
+          icon: "warning",
+          title: "Logged in (Firebase) but JWT failed",
+          text: "You are logged in, but login token could not be retrieved.",
+          timer: 2500,
+          showConfirmButton: false,
+        });
+      }
+
+      // 3️⃣ Success alert
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful!",
+        text: `Welcome back, ${user.displayName || user.email}`,
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Login error:", err);
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: err.message || err.response?.data?.message || "Please try again!",
+      });
+    }
+  };
+
   return (
-    <div onSubmit={handleSubmit(handleLogin)} className="min-h-screen flex items-center justify-center bg-base-200 px-5">
+    <div className="min-h-screen flex items-center justify-center bg-base-200 px-5">
       <div className="w-full max-w-md bg-base-100 shadow-xl p-8 rounded-xl">
-        
         <h1 className="text-3xl font-bold text-center mb-5">Welcome Back</h1>
 
-        <form className="space-y-4">
-          {/* Email */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-medium">Email Address</span>
-            </label>
-            <input
-              type="email"
-              {...register('email')}
-              placeholder="Enter your email"
-              className="input input-bordered w-full"
-              required
-            />
-          </div>
-
-          {/* Password */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-medium">Password</span>
-            </label>
-            <input
-              type="password"
-              {...register('password')}
-              placeholder="Enter your password"
-              className="input input-bordered w-full"
-              required
-            />
-          </div>
-
-          {/* Forget Password */}
+        <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
+          <input type="email" {...register("email")} placeholder="Email Address" className="input input-bordered w-full" required />
+          <input type="password" {...register("password")} placeholder="Password" className="input input-bordered w-full" required />
           <div className="text-right">
-            <Link
-              to="/forgot-password"
-              className="text-sm text-primary hover:underline"
-            >
-              Forgot Password?
-            </Link>
+            <Link to="/forgot-password" className="text-sm text-primary">Forgot Password?</Link>
           </div>
-
-          {/* Submit */}
-          <button className="btn btn-primary w-full mt-3">
-            Login
-          </button>
+          <button className="btn btn-primary w-full mt-3">Login</button>
         </form>
 
-        {/* No account */}
         <p className="text-center mt-4">
-          Don’t have an account?{" "}
-          <Link to="/register" className="text-primary underline font-semibold hover:underline">
-            Register
-          </Link>
+          Don’t have an account? <Link to="/register" className="text-primary underline font-semibold">Register</Link>
         </p>
+
         <p className="text-center my-2 font-semibold">OR</p>
-        <SocialLogin></SocialLogin>
+        <SocialLogin />
       </div>
-      
     </div>
   );
 };

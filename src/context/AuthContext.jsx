@@ -1,64 +1,101 @@
-import { createContext, useEffect, useState } from "react";
-import axios from "axios";
+// src/context/AuthContext.jsx
+import React, { createContext, useContext, useEffect, useState } from "react";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  GoogleAuthProvider,
+  signInWithPopup,
+  updateProfile,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { app } from "../firebase/firebase.init"; // make sure this exports app
+import toast, { Toaster } from "react-hot-toast";
 
 export const AuthContext = createContext(null);
 
-const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);          // Authenticated user (firebase/local)
-  const [dbUser, setDbUser] = useState(null);      // user from database (role, premium, blocked)
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔥 Fake login listener (replace with Firebase auth if needed)
-  const fakeAuth = async () => {
-    const demoUser = {
-      name: "Demo User",
-      email: "demo@gmail.com",
-    };
-    return demoUser;
-  };
-
-  // 🟢 Load auth + DB user
   useEffect(() => {
-    const loadUser = async () => {
-      const loggedUser = await fakeAuth(); 
-      setUser(loggedUser);
-
-      if (loggedUser?.email) {
-        try {
-          const res = await axios.get(
-            `http://localhost:3000/users/${loggedUser.email}`
-          );
-          setDbUser(res.data); // load user from DB
-        } catch (e) {
-          console.log("DB user fetch error:", e);
-        }
-      }
-
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
       setLoading(false);
-    };
-
-    loadUser();
+    });
+    return () => unsubscribe();
   }, []);
 
-  // 🛑 Logout simple
-  const logOut = () => {
-    setUser(null);
-    setDbUser(null);
+  const registerUser = async (email, password, name, photo) => {
+    setLoading(true);
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      if (name || photo) {
+        await updateProfile(res.user, { displayName: name || "", photoURL: photo || "" });
+      }
+      toast.success("Registered (Firebase) ✅");
+      return res.user;
+    } catch (err) {
+      toast.error(err.message || "Register failed");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signInUser = async (email, password) => {
+    setLoading(true);
+    try {
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      toast.success("Logged in (Firebase) ✅");
+      return res.user;
+    } catch (err) {
+      toast.error(err.message || "Login failed");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    setLoading(true);
+    try {
+      const res = await signInWithPopup(auth, googleProvider);
+      toast.success("Google login ✅");
+      return res.user;
+    } catch (err) {
+      toast.error(err.message || "Google login failed");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const logOut = async () => {
+    setLoading(true);
+    try {
+      await signOut(auth);
+      toast.success("Logged out ✅");
+      localStorage.removeItem("token"); // important
+    } catch (err) {
+      toast.error(err.message || "Logout failed");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,        // firebase/local user
-        dbUser,      // mongoDB user => {role, premium, blocked}
-        loading,
-        setDbUser,
-        logOut,
-      }}
-    >
+    <AuthContext.Provider value={{ user, loading, registerUser, signInUser, signInWithGoogle, logOut }}>
       {children}
+      <Toaster position="top-right" />
     </AuthContext.Provider>
   );
 };
 
-export default AuthProvider;
+export const useAuth = () => useContext(AuthContext);
+export default AuthContext;
