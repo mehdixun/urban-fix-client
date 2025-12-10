@@ -18,20 +18,29 @@ const UserProfile = () => {
   // Fetch user info from backend
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!user?.email) return;
-
+      if (!user?.email) {
+        setLoading(false);
+        return;
+      }
       try {
         const res = await axios.get(`http://localhost:3000/users/${user.email}`);
-        setUserInfo({
-          name: res.data.name,
-          email: res.data.email,
-          photoURL: res.data.photoURL,
-          role: res.data.role,
-          isPremium: res.data.isPremium,
-          isBlocked: res.data.isBlocked,
-        });
+        if (res.data) {
+          setUserInfo({
+            name: res.data.name || "",
+            email: res.data.email || "",
+            photoURL: res.data.photoURL || "",
+            role: res.data.role || "",
+            isPremium: res.data.isPremium || false,
+            isBlocked: res.data.isBlocked || false,
+          });
+        }
       } catch (err) {
         console.error(err);
+        Swal.fire({
+          icon: "error",
+          title: "Failed to fetch profile",
+          text: err.response?.data?.message || err.message,
+        });
       } finally {
         setLoading(false);
       }
@@ -42,18 +51,28 @@ const UserProfile = () => {
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
+    if (!user?.email) {
+      Swal.fire({
+        icon: "error",
+        title: "No user logged in",
+      });
+      return;
+    }
+
     try {
       // Update backend
-      await axios.put(`http://localhost:3000/users/${user.email}`, {
+      const res = await axios.put(`http://localhost:3000/users/${user.email}`, {
         name: userInfo.name,
         photoURL: userInfo.photoURL,
       });
 
-      // Update Firebase profile
-      await user.updateProfile({
-        displayName: userInfo.name,
-        photoURL: userInfo.photoURL,
-      });
+      // Update Firebase profile safely
+      if (user.updateProfile) {
+        await user.updateProfile({
+          displayName: userInfo.name,
+          photoURL: userInfo.photoURL,
+        });
+      }
 
       Swal.fire({
         icon: "success",
@@ -61,12 +80,21 @@ const UserProfile = () => {
         timer: 1500,
         showConfirmButton: false,
       });
+
+      // Update local state with latest data
+      if (res.data.user) {
+        setUserInfo((prev) => ({
+          ...prev,
+          name: res.data.user.name,
+          photoURL: res.data.user.photoURL,
+        }));
+      }
     } catch (err) {
       console.error(err);
       Swal.fire({
         icon: "error",
         title: "Update Failed",
-        text: err.message || "Please try again!",
+        text: err.response?.data?.message || err.message || "Please try again!",
       });
     }
   };
@@ -83,7 +111,10 @@ const UserProfile = () => {
         </p>
       )}
 
-      <form onSubmit={handleUpdateProfile} className="space-y-4 bg-base-100 p-6 shadow rounded">
+      <form
+        onSubmit={handleUpdateProfile}
+        className="space-y-4 bg-base-100 p-6 shadow rounded"
+      >
         <div className="flex items-center gap-4">
           <img
             src={userInfo.photoURL || "https://via.placeholder.com/100"}
@@ -104,12 +135,11 @@ const UserProfile = () => {
         <input
           type="text"
           value={userInfo.name}
-          onChange={(e) =>
-            setUserInfo({ ...userInfo, name: e.target.value })
-          }
+          onChange={(e) => setUserInfo({ ...userInfo, name: e.target.value })}
           placeholder="Full Name"
           className="input input-bordered w-full"
         />
+
         <input
           type="email"
           value={userInfo.email}
@@ -119,7 +149,7 @@ const UserProfile = () => {
 
         <div>
           <p>
-            <strong>Role:</strong> {userInfo.role}
+            <strong>Role:</strong> {userInfo.role || "N/A"}
           </p>
           <p>
             <strong>Status:</strong> {userInfo.isPremium ? "Premium" : "Free User"}

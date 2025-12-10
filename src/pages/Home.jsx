@@ -1,6 +1,7 @@
 import Banner from "./Banner";
 import Features from "./Features";
 import HowItWorks from "./HowItWorks";
+import LatestResolvedIssues from "./LatestResolvedIssues";
 import VisionMission from "./VisionMission ";
 import WhyChooseUs from "./WhyChooseUs";
 
@@ -10,6 +11,7 @@ const Home = () => {
       <h1 className="text-4xl font-bold">Welcome to UrbanFix</h1>
       <p className="mt-2 text-gray-600">Your city's issue reporting platform.</p>
       <Banner></Banner>
+      <LatestResolvedIssues></LatestResolvedIssues>
       <Features></Features>
       <HowItWorks></HowItWorks>
       <WhyChooseUs></WhyChooseUs>

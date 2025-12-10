@@ -14,6 +14,7 @@ const DashBoardLayout = () => {
       return [
         { to: '/dashboard/my-issues', label: 'My Issues' },
          { to: '/dashboard/my-payment', label: 'My Payment' },
+         { to: '/dashboard/user-management', label: 'User management' },
         { to: '/dashboard/profile', label: 'Profile' },
       ];
     }

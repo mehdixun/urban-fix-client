@@ -14,7 +14,7 @@ const Navbar = () => {
   const menuItems = [
     { name: "Home", path: "/", end: true },
     { name: "All Issues", path: "/all-issues", end: true },
-    ...(user ? [{ name: "Create A Issue", path: "/create-issue", end: true }] : []),
+    ...(user ? [{ name: "Report A Issue", path: "/create-issue", end: true }] : []),
     ...(user ? [{ name: "Dashboard", path: "/dashboard", end: true }] : []),
      { name: "About Us", path: "/about-us", end: true },
   ];

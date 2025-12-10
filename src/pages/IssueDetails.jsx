@@ -1,75 +1,85 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import UseAuth from "../hooks/UseAuth";
 import axios from "axios";
 
 const IssueDetails = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // MongoDB _id
   const navigate = useNavigate();
   const { user } = UseAuth();
 
   const [issue, setIssue] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Redirect non-logged-in users
   useEffect(() => {
     if (!user) navigate("/login");
   }, [user, navigate]);
 
-  // Load issue data
   useEffect(() => {
     loadIssue();
   }, [id]);
 
+  const displayText = (value) => {
+    if (!value) return "Unknown";
+    if (typeof value === "string") return value;
+    if (typeof value === "object") return value.name || value.email || JSON.stringify(value);
+    return String(value);
+  };
+
   const loadIssue = async () => {
     try {
+      // Directly get issue by MongoDB _id
       const res = await axios.get(`http://localhost:3000/issues/${id}`);
-      setIssue(res.data);
+      const found = res.data;
+
+      if (!found) {
+        alert("Issue not found");
+        navigate("/all-issues");
+        return;
+      }
+
+      // Add default timeline if missing
+      if (!found.timeline || found.timeline.length === 0) {
+        found.timeline = [
+          {
+            status: "Pending",
+            message: "Issue reported by citizen",
+            updatedBy: displayText(found.postedBy),
+            date: found.createdAt || new Date(),
+          },
+          {
+            status: "In-Progress",
+            message: "Issue assigned to Staff: John Doe",
+            updatedBy: "Admin",
+            date: found.updatedAt || new Date(),
+          },
+          {
+            status: "In-Progress",
+            message: "Work started on the issue",
+            updatedBy: "Staff John Doe",
+            date: new Date(),
+          },
+          {
+            status: "Resolved",
+            message: "Issue marked as resolved",
+            updatedBy: "Staff John Doe",
+            date: new Date(),
+          },
+          {
+            status: "Closed",
+            message: "Issue closed by staff",
+            updatedBy: "Staff John Doe",
+            date: new Date(),
+          },
+        ];
+      }
+
+      setIssue(found);
       setLoading(false);
     } catch (err) {
-      console.log(err);
-      setLoading(false);
-    }
-  };
-
-  // Upvote
-  const handleUpvote = async () => {
-    if (!user) return navigate("/login");
-    try {
-      const res = await axios.patch(
-        `http://localhost:3000/issues/toggle-upvote/${id}`,
-        { email: user.email }
-      );
-      setIssue((prev) => ({ ...prev, ...res.data }));
-    } catch (err) {
-      alert(err.response?.data?.message || "Upvote failed");
-    }
-  };
-
-  // Delete
-  const handleDelete = async () => {
-    if (!window.confirm("Are you sure you want to delete this issue?")) return;
-    try {
-      await axios.delete(`http://localhost:3000/issues/${id}`);
-      alert("Deleted successfully");
+      console.error(err);
+      alert("Issue not found");
       navigate("/all-issues");
-    } catch {
-      alert("Delete failed");
-    }
-  };
-
-  // Boost
-  const handleBoost = async () => {
-    if (issue.priority === "High") return;
-    alert("Payment successful! Issue boosted 🔥");
-    try {
-      const res = await axios.patch(
-        `http://localhost:3000/issues/boost/${id}`,
-        { boosted: true }
-      );
-      setIssue((prev) => ({ ...prev, ...res.data }));
-    } catch {
-      alert("Boost failed");
     }
   };
 
@@ -90,6 +100,7 @@ const IssueDetails = () => {
             className="w-full h-[350px] object-cover"
           />
         </figure>
+
         <div className="card-body">
           <h2 className="text-3xl font-bold">{issue.title}</h2>
 
@@ -109,83 +120,54 @@ const IssueDetails = () => {
             📍 <span className="font-semibold">{issue.location}</span>
           </p>
 
-          <p className="mt-4 leading-relaxed">{issue.description}</p>
+          <p className="mt-4 leading-relaxed">{issue.description || "No description"}</p>
 
           <p className="text-sm text-gray-500 mt-4">
-            Posted by: <span className="font-semibold">{issue.postedBy}</span>
+            Posted by: <span className="font-semibold">{displayText(issue.postedBy)}</span>
           </p>
 
-          {issue.assignedStaff && (
-            <div className="mt-5 p-4 border rounded bg-gray-50">
-              <h3 className="font-bold text-lg">Assigned Staff</h3>
-              <p>Name: {issue.assignedStaff.name}</p>
-              <p>Email: {issue.assignedStaff.email}</p>
-            </div>
-          )}
-
+          {/* TIMELINE / STEP UI */}
           {issue.timeline && issue.timeline.length > 0 && (
             <div className="mt-6">
-              <h3 className="font-bold text-lg mb-2">Issue Timeline</h3>
-              <div className="flex flex-col-reverse gap-3">
+              <h3 className="font-bold text-lg mb-4">Issue Timeline</h3>
+              <div className="flex flex-col gap-4">
                 {issue.timeline
                   .slice()
-                  .reverse()
+                  .reverse() // latest on top
                   .map((t, idx) => (
-                    <div
-                      key={idx}
-                      className="p-3 border-l-4 border-blue-500 bg-gray-50 rounded"
-                    >
-                      <div className="flex justify-between text-sm">
-                        <span
-                          className={`badge ${
-                            t.status === "Resolved"
-                              ? "badge-success"
-                              : t.status === "In-Progress"
-                              ? "badge-warning"
-                              : t.status === "Boosted"
-                              ? "badge-success"
-                              : t.status === "Closed"
-                              ? "badge-error"
-                              : "badge-primary"
-                          }`}
-                        >
-                          {t.status}
-                        </span>
-                        <span className="text-gray-400">
-                          {new Date(t.date).toLocaleString()}
-                        </span>
+                    <div key={idx} className="flex items-start gap-4">
+                      {/* Timeline dot */}
+                      <div className="w-4 h-4 mt-2 rounded-full border-2 border-blue-500 bg-white flex-shrink-0"></div>
+                      {/* Timeline content */}
+                      <div className="flex-1 p-3 border-l-4 border-blue-500 bg-gray-50 rounded">
+                        <div className="flex justify-between text-sm">
+                          <span
+                            className={`badge ${
+                              t.status === "Resolved"
+                                ? "badge-success"
+                                : t.status === "In-Progress"
+                                ? "badge-warning"
+                                : t.status === "Closed"
+                                ? "badge-error"
+                                : "badge-primary"
+                            }`}
+                          >
+                            {t.status}
+                          </span>
+                          <span className="text-gray-400">
+                            {new Date(t.date).toLocaleString()}
+                          </span>
+                        </div>
+                        <p className="mt-1 text-sm">{t.message}</p>
+                        <p className="text-gray-500 text-xs">
+                          By: {displayText(t.updatedBy)}
+                        </p>
                       </div>
-                      <p className="mt-1 text-sm">{t.message}</p>
-                      <p className="text-gray-500 text-xs">By: {t.updatedBy}</p>
                     </div>
                   ))}
               </div>
             </div>
           )}
-
-          <div className="mt-6">
-            <button className="btn btn-primary" onClick={handleUpvote}>
-              👍 Upvote ({issue.upvotes})
-            </button>
-          </div>
-
-          <div className="mt-8 flex gap-4">
-            {user?.email === issue.postedBy && issue.status === "Pending" && (
-              <Link to={`/edit-issue/${id}`} className="btn btn-warning">
-                ✏️ Edit
-              </Link>
-            )}
-            {user?.email === issue.postedBy && (
-              <button onClick={handleDelete} className="btn btn-error">
-                🗑 Delete
-              </button>
-            )}
-            {issue.priority !== "High" && (
-              <button className="btn btn-success" onClick={handleBoost}>
-                🚀 Boost Priority (100৳)
-              </button>
-            )}
-          </div>
         </div>
       </div>
     </div>

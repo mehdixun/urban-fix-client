@@ -19,6 +19,7 @@ import CitizenDashboard from "../pages/CitizenDashboard";
 import UserProfile from "../pages/UserProfile";
 import AdminPayments from "../pages/AdminPayments";
 import UserPayments from "../pages/UserPayments";
+import UsersManagement from "../pages/UsersManagement";
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +43,7 @@ export const router = createBrowserRouter([
         ),
         children: [
           { path: "my-issues", element: <MyIssues /> },
+          { path: "user-management", element: <UsersManagement /> },
           { path: "my-payment", element: <UserPayments /> },
           { path: "profile", element: <UserProfile /> },
           { path: "edit-issue/:id", element: <EditIssue /> },
