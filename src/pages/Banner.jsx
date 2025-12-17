@@ -1,3 +1,4 @@
+// src/components/Banner.jsx
 import React from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -13,30 +14,31 @@ const Banner = () => {
     return (
         <div className="w-full md:h-[450px] h-[250px] my-10 rounded-xl overflow-hidden shadow-lg">
             <Carousel
-                autoPlay={true}
-                infiniteLoop={true}
+                autoPlay
+                infiniteLoop
                 showThumbs={false}
                 showStatus={false}
-                interval={3000}
-                stopOnHover={false}
+                interval={3500}
+                stopOnHover
+                swipeable
+                emulateTouch
             >
                 {images.map((img, index) => (
-                    <div key={index} className="relative">
-                        {/* Image */}
+                    <div key={index} className="relative w-full h-full">
                         <img
                             src={img}
-                            className="object-cover w-full md:h-[450px] h-[250px]"
+                            alt={`Banner ${index + 1}`}
+                            className="w-full h-[250px] md:h-[450px] object-cover"
                         />
-
                         {/* Overlay Gradient */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/10"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
 
-                        {/* Text Content */}
-                        <div className="absolute left-6 bottom-6 text-white">
-                            <h2 className="text-xl md:text-3xl font-bold drop-shadow-md">
+                        {/* Text */}
+                        <div className="absolute left-6 md:left-12 bottom-6 md:bottom-12 text-white max-w-lg">
+                            <h2 className="text-lg md:text-4xl font-bold drop-shadow-lg">
                                 Smart City Issue Reporting
                             </h2>
-                            <p className="text-sm md:text-base opacity-90 mt-1">
+                            <p className="text-xs md:text-base opacity-90 mt-1">
                                 Report problems easily. Let’s improve our city together.
                             </p>
                         </div>

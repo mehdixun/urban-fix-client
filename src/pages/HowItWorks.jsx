@@ -1,3 +1,4 @@
+// src/components/HowItWorks.jsx
 import React from "react";
 import { Wrench, ClipboardCheck, UserCheck, Truck } from "lucide-react";
 
@@ -31,35 +32,23 @@ const HowItWorks = () => {
 
   return (
     <div className="py-20 px-5 bg-base-200">
-      <h2 className="text-4xl md:text-5xl font-bold text-center mb-14">
+      <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-primary">
         How It Works
       </h2>
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
-        {steps.map((s) => (
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        {steps.map((step) => (
           <div
-            key={s.id}
-            className="
-            relative group rounded-2xl p-[1px] 
-            bg-gradient-to-r from-primary to-secondary shadow-xl
-            hover:shadow-primary/60 transition duration-300
-          "
+            key={step.id}
+            className="relative group rounded-2xl p-[1px] bg-gradient-to-r from-primary to-secondary shadow-lg hover:shadow-primary/50 transition duration-300"
           >
-            <div
-              className="
-              bg-base-100 backdrop-blur-md rounded-2xl p-8 h-full
-              flex flex-col items-center text-center
-              group-hover:scale-[1.02] transition duration-300
-            "
-            >
-              <div className="text-primary group-hover:scale-110 transition">
-                {s.icon}
-              </div>
-              <h3 className="text-xl font-semibold mt-4 mb-2">{s.title}</h3>
-              <p className="opacity-75 text-sm">{s.desc}</p>
+            <div className="bg-base-100 backdrop-blur-md rounded-2xl p-8 flex flex-col items-center text-center group-hover:scale-105 transition-transform duration-300 h-full relative">
+              <div className="text-primary mb-4">{step.icon}</div>
+              <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+              <p className="text-sm text-gray-600">{step.desc}</p>
 
-              <span className="absolute -top-4 right-4 bg-primary text-white px-3 py-1 rounded-full text-sm shadow-md">
-                Step {s.id}
+              <span className="absolute -top-3 right-3 bg-primary text-white px-3 py-1 rounded-full text-sm shadow-md">
+                Step {step.id}
               </span>
             </div>
           </div>

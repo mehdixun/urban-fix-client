@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import UseAuth from "../hooks/UseAuth";
+import useAuth from "../hooks/UseAuth";
 import axios from "axios";
+import Swal from "sweetalert2";
+
+const API_BASE = "http://localhost:3000";
 
 const CreateIssue = () => {
-  const { user } = UseAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -13,29 +16,56 @@ const CreateIssue = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Road");
   const [location, setLocation] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(""); // base64 string
+  const [preview, setPreview] = useState(""); // preview image
 
-  // Mutation for creating issue
   const createIssueMutation = useMutation({
     mutationFn: async (newIssue) => {
-      const res = await axios.post("http://localhost:3000/issues", newIssue);
+      const res = await axios.post(`${API_BASE}/issues`, newIssue);
       return res.data;
     },
     onSuccess: () => {
-      // Refetch my-issues query to update UI
       queryClient.invalidateQueries(["my-issues", user?.email]);
+      Swal.fire({
+        icon: "success",
+        title: "Issue Created ✅",
+        text: "Your issue has been reported successfully!",
+        timer: 2000,
+        showConfirmButton: false,
+      });
       navigate("/dashboard/my-issues");
     },
     onError: (err) => {
-      console.error(err);
-      alert("Failed to create issue 😢");
+      console.error("❌ Issue Creation Failed:", err);
+      Swal.fire({
+        icon: "error",
+        title: "Failed 😢",
+        text: err.response?.data?.message || err.message || "Could not create the issue",
+      });
     },
   });
+
+  // handle file upload
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImage(reader.result); // base64 string
+      setPreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!user) {
-      alert("Please login first!");
+      Swal.fire({
+        icon: "warning",
+        title: "Login Required",
+        text: "Please login to submit an issue",
+      });
       return;
     }
 
@@ -44,11 +74,16 @@ const CreateIssue = () => {
       description,
       category,
       location,
-      image,
-      postedBy: user.email,
+      image: image || "", // base64 or empty
+      postedBy: {
+        email: user.email,
+        name: user.displayName || "User",
+        photoURL: user.photoURL || "",
+      },
       status: "Pending",
       priority: "Normal",
       upvotes: 0,
+      upvotedUsers: [],
       timeline: [
         {
           status: "Pending",
@@ -63,10 +98,12 @@ const CreateIssue = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-10">
-      <h1 className="text-3xl font-bold mb-6">Create New Issue</h1>
+    <div className="max-w-3xl mx-auto px-4 py-10">
+      <h1 className="text-3xl font-bold mb-8 text-primary text-center md:text-left">
+        Create New Issue
+      </h1>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <input
           type="text"
           placeholder="Issue Title"
@@ -75,13 +112,15 @@ const CreateIssue = () => {
           required
           className="input input-bordered w-full"
         />
+
         <textarea
           placeholder="Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
-          className="textarea textarea-bordered w-full"
+          className="textarea textarea-bordered w-full min-h-[120px]"
         />
+
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
@@ -93,6 +132,7 @@ const CreateIssue = () => {
           <option>Streetlight</option>
           <option>Others</option>
         </select>
+
         <input
           type="text"
           placeholder="Location"
@@ -101,20 +141,30 @@ const CreateIssue = () => {
           required
           className="input input-bordered w-full"
         />
+
+        {/* Image Upload */}
         <input
-          type="text"
-          placeholder="Image URL"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          className="input input-bordered w-full"
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="file-input file-input-bordered w-full"
         />
+
+        {/* Preview */}
+        {preview && (
+          <img
+            src={preview}
+            alt="Preview"
+            className="w-full h-48 object-cover rounded-md mt-2"
+          />
+        )}
 
         <button
           type="submit"
-          className={`btn btn-primary ${createIssueMutation.isLoading ? "loading" : ""}`}
+          className={`btn btn-primary mt-3 ${createIssueMutation.isLoading ? "loading" : ""}`}
           disabled={createIssueMutation.isLoading}
         >
-          Submit Issue
+          {createIssueMutation.isLoading ? "Submitting..." : "Submit Issue"}
         </button>
       </form>
     </div>

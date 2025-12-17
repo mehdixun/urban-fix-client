@@ -7,24 +7,28 @@ const PrivateRoute = ({ children }) => {
   const { user, loading } = UseAuth();
   const location = useLocation();
 
-  // show loader while auth state loading
+  // 1️⃣ Show loader while auth state is loading
   if (loading) {
-    return <Loader />;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader />
+      </div>
+    );
   }
 
-  // if not logged in → redirect to login
+  // 2️⃣ If user not logged in, redirect to login
   if (!user) {
     return (
       <Navigate
         to="/login"
         replace
-        state={{ from: location }} 
+        state={{ from: location }}
       />
     );
   }
 
-  // else page allow
-  return children;
+  // 3️⃣ If logged in, render children
+  return <>{children}</>;
 };
 
 export default PrivateRoute;

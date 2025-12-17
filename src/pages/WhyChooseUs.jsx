@@ -1,3 +1,4 @@
+// src/pages/WhyChooseUs.jsx
 import React from "react";
 
 const WhyChooseUs = () => {
@@ -17,27 +18,30 @@ const WhyChooseUs = () => {
   ];
 
   return (
-    <div className="py-20 px-5 bg-base-100">
+    <section className="py-20 bg-base-100 px-5">
       <h2 className="text-4xl md:text-5xl font-bold text-center mb-14">
         Why Choose UrbanFix?
       </h2>
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
-        {items.map((i, index) => (
+        {items.map((item, index) => (
           <div
             key={index}
             className="
-              p-8 bg-base-200 rounded-2xl shadow-xl
+              p-8 bg-base-200 rounded-2xl shadow-lg
               border border-transparent hover:border-primary
-              hover:shadow-primary/40 transition duration-300
+              hover:shadow-lg hover:shadow-primary/40
+              transition duration-300 transform hover:-translate-y-2
             "
           >
-            <h3 className="text-2xl font-semibold mb-3">{i.title}</h3>
-            <p className="opacity-75">{i.desc}</p>
+            <h3 className="text-2xl md:text-3xl font-semibold mb-3">
+              {item.title}
+            </h3>
+            <p className="text-gray-700 text-base md:text-lg">{item.desc}</p>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

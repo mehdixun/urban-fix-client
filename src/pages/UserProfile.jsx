@@ -2,20 +2,22 @@ import React, { useState, useEffect } from "react";
 import UseAuth from "../hooks/UseAuth";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Loader from "../components/Loader";
 
 const UserProfile = () => {
-  const { user } = UseAuth(); // Firebase user
+  const { user } = UseAuth();
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
     photoURL: "",
-    role: "",
     isPremium: false,
     isBlocked: false,
   });
   const [loading, setLoading] = useState(true);
 
-  // Fetch user info from backend
+  const API_BASE = "http://localhost:3000";
+
+  // ================= FETCH USER DATA =================
   useEffect(() => {
     const fetchUserData = async () => {
       if (!user?.email) {
@@ -23,13 +25,12 @@ const UserProfile = () => {
         return;
       }
       try {
-        const res = await axios.get(`http://localhost:3000/users/${user.email}`);
+        const res = await axios.get(`${API_BASE}/users/${encodeURIComponent(user.email.toLowerCase())}`);
         if (res.data) {
           setUserInfo({
             name: res.data.name || "",
             email: res.data.email || "",
             photoURL: res.data.photoURL || "",
-            role: res.data.role || "",
             isPremium: res.data.isPremium || false,
             isBlocked: res.data.isBlocked || false,
           });
@@ -39,7 +40,7 @@ const UserProfile = () => {
         Swal.fire({
           icon: "error",
           title: "Failed to fetch profile",
-          text: err.response?.data?.message || err.message,
+          text: err.response?.data?.message || err.message || "User not found",
         });
       } finally {
         setLoading(false);
@@ -49,24 +50,22 @@ const UserProfile = () => {
     fetchUserData();
   }, [user]);
 
+  // ================= UPDATE PROFILE =================
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     if (!user?.email) {
-      Swal.fire({
-        icon: "error",
-        title: "No user logged in",
-      });
+      Swal.fire({ icon: "error", title: "No user logged in" });
       return;
     }
 
     try {
-      // Update backend
-      const res = await axios.put(`http://localhost:3000/users/${user.email}`, {
+      // Backend update
+      await axios.put(`${API_BASE}/users/${encodeURIComponent(user.email.toLowerCase())}`, {
         name: userInfo.name,
         photoURL: userInfo.photoURL,
       });
 
-      // Update Firebase profile safely
+      // Firebase update
       if (user.updateProfile) {
         await user.updateProfile({
           displayName: userInfo.name,
@@ -80,15 +79,6 @@ const UserProfile = () => {
         timer: 1500,
         showConfirmButton: false,
       });
-
-      // Update local state with latest data
-      if (res.data.user) {
-        setUserInfo((prev) => ({
-          ...prev,
-          name: res.data.user.name,
-          photoURL: res.data.user.photoURL,
-        }));
-      }
     } catch (err) {
       console.error(err);
       Swal.fire({
@@ -99,34 +89,29 @@ const UserProfile = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-10">Loading profile...</p>;
+  if (loading) return <Loader />;
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">My Profile</h2>
+      <h2 className="text-3xl font-bold mb-6 text-center">My Profile</h2>
 
       {userInfo.isBlocked && (
-        <p className="text-red-500 font-semibold mb-4">
-          Your account is blocked. Please contact authorities.
+        <p className="text-red-500 font-semibold mb-4 text-center">
+          Your account is blocked. Please contact support.
         </p>
       )}
 
-      <form
-        onSubmit={handleUpdateProfile}
-        className="space-y-4 bg-base-100 p-6 shadow rounded"
-      >
+      <form onSubmit={handleUpdateProfile} className="space-y-4 bg-base-100 p-6 shadow-xl rounded-lg">
         <div className="flex items-center gap-4">
           <img
             src={userInfo.photoURL || "https://via.placeholder.com/100"}
             alt="Profile"
-            className="w-24 h-24 rounded-full object-cover"
+            className="w-24 h-24 rounded-full object-cover border"
           />
           <input
             type="text"
             value={userInfo.photoURL}
-            onChange={(e) =>
-              setUserInfo({ ...userInfo, photoURL: e.target.value })
-            }
+            onChange={(e) => setUserInfo({ ...userInfo, photoURL: e.target.value })}
             placeholder="Photo URL"
             className="input input-bordered w-full"
           />
@@ -138,6 +123,7 @@ const UserProfile = () => {
           onChange={(e) => setUserInfo({ ...userInfo, name: e.target.value })}
           placeholder="Full Name"
           className="input input-bordered w-full"
+          required
         />
 
         <input
@@ -147,18 +133,11 @@ const UserProfile = () => {
           className="input input-bordered w-full bg-gray-200"
         />
 
-        <div>
-          <p>
-            <strong>Role:</strong> {userInfo.role || "N/A"}
-          </p>
-          <p>
-            <strong>Status:</strong> {userInfo.isPremium ? "Premium" : "Free User"}
-          </p>
+        <div className="flex justify-between text-sm text-gray-700 mt-2">
+          <p><strong>Status:</strong> {userInfo.isPremium ? "Premium" : "Free User"}</p>
         </div>
 
-        <button type="submit" className="btn btn-primary w-full mt-2">
-          Update Profile
-        </button>
+        <button type="submit" className="btn btn-primary w-full mt-3">Update Profile</button>
       </form>
     </div>
   );

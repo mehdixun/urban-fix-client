@@ -1,15 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import UseAuth from "../hooks/UseAuth";
-import axios from "axios";
 import Swal from "sweetalert2";
-import SocialLogin from "../pages/SocialLogin";
+import SocialLogin from "./SocialLogin";
+import { FaUserCircle } from "react-icons/fa";
 
 const Register = () => {
-  const { register, handleSubmit } = useForm();
-  const { registerUser } = UseAuth(); // Firebase registration
+  const { register, handleSubmit, watch } = useForm();
+  const { registerUser } = UseAuth();
   const navigate = useNavigate();
+  const [preview, setPreview] = useState(null);
+
+  const photoFile = watch("photo");
+
+  // live image preview
+  useEffect(() => {
+    if (photoFile && photoFile[0]) {
+      const url = URL.createObjectURL(photoFile[0]);
+      setPreview(url);
+      return () => URL.revokeObjectURL(url);
+    }
+  }, [photoFile]);
 
   const handleRegistration = async (data) => {
     Swal.fire({
@@ -19,28 +31,18 @@ const Register = () => {
     });
 
     try {
-      // Firebase register
-      const user = await registerUser(data.email, data.password, data.name, data.photo);
+      const profileImg = data.photo?.[0] || null;
 
-      try {
-        // Backend JWT (optional, wrap in try/catch)
-        const jwtRes = await axios.post("http://localhost:3000/jwt", { email: user.email });
-        localStorage.setItem("token", jwtRes.data.token);
-      } catch (jwtErr) {
-        console.error("JWT error:", jwtErr);
-        // Optionally notify user
-        Swal.fire({
-          icon: "warning",
-          title: "Registered (Firebase) but JWT failed",
-          text: "You are registered, but login token could not be retrieved.",
-          timer: 2500,
-          showConfirmButton: false,
-        });
-      }
+      const user = await registerUser(
+        data.email,
+        data.password,
+        data.name,
+        profileImg
+      );
 
       Swal.fire({
         icon: "success",
-        title: "Registration Successful!",
+        title: "Registration Successful 🎉",
         text: `Welcome, ${user.displayName || user.email}`,
         timer: 2000,
         showConfirmButton: false,
@@ -48,33 +50,78 @@ const Register = () => {
 
       navigate("/dashboard");
     } catch (err) {
-      console.error("Register error:", err);
       Swal.fire({
         icon: "error",
-        title: "Registration Failed",
-        text: err.message || err.response?.data?.message || "Please try again!",
+        title: "Registration Failed 😢",
+        text: err.message || "Something went wrong",
       });
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200 px-5">
-      <div className="w-full max-w-md bg-base-100 shadow-xl p-8 rounded-xl">
-        <h1 className="text-3xl font-bold text-center mb-5">Create an Account</h1>
+    <div className="min-h-screen flex items-center justify-center bg-base-200 px-4">
+      <div className="w-full max-w-md bg-base-100 shadow-xl p-8 rounded-2xl">
+        <h1 className="text-3xl font-bold text-center mb-6">
+          Create an Account
+        </h1>
+
+        {/* Avatar Preview */}
+        <div className="flex justify-center mb-4">
+          <div className="w-24 h-24 rounded-full border flex items-center justify-center bg-gray-100 overflow-hidden">
+            {preview ? (
+              <img
+                src={preview}
+                alt="preview"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <FaUserCircle className="text-6xl text-gray-400" />
+            )}
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit(handleRegistration)} className="space-y-4">
-          <input type="text" {...register("name")} placeholder="Full Name" className="input input-bordered w-full" required />
-          <input type="email" {...register("email")} placeholder="Email Address" className="input input-bordered w-full" required />
-          <input type="text" {...register("photo")} placeholder="Photo URL" className="input input-bordered w-full" />
-          <input type="password" {...register("password")} placeholder="Password" className="input input-bordered w-full" required minLength={6} />
-          <button className="btn btn-primary w-full mt-3">Register</button>
+          <input
+            type="text"
+            {...register("name")}
+            placeholder="Full Name"
+            className="input input-bordered w-full"
+            required
+          />
+          <input
+            type="email"
+            {...register("email")}
+            placeholder="Email Address"
+            className="input input-bordered w-full"
+            required
+          />
+          <input
+            type="file"
+            {...register("photo")}
+            accept="image/*"
+            className="file-input file-input-bordered w-full"
+          />
+          <input
+            type="password"
+            {...register("password")}
+            placeholder="Password"
+            className="input input-bordered w-full"
+            required
+            minLength={6}
+          />
+          <button className="btn btn-primary w-full mt-3">
+            Register
+          </button>
         </form>
 
-        <p className="text-center mt-4">
-          Already have an account? <Link to="/login" className="text-primary font-semibold">Login</Link>
+        <p className="text-center mt-4 text-gray-600">
+          Already have an account?{" "}
+          <Link to="/login" className="text-primary font-semibold hover:underline">
+            Login
+          </Link>
         </p>
 
-        <p className="text-center my-2 font-semibold">OR</p>
+        <p className="text-center my-4 font-semibold text-gray-500">OR</p>
         <SocialLogin />
       </div>
     </div>

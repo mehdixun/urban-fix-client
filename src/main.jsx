@@ -1,4 +1,3 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { RouterProvider } from 'react-router'
@@ -10,33 +9,29 @@ import { Toaster } from 'react-hot-toast'
 const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        {/* Global Toast System */}
-        <Toaster
-          position="top-right"
-          reverseOrder={false}
-          toastOptions={{
-            style: {
-              background: '#f0f4f8',
-              color: '#111',
-              padding: '16px',
-              border: '1px solid #3b82f6',
-              borderRadius: '8px',
-            },
-            success: {
-              style: { background: '#d1fae5', color: '#065f46', border: '1px solid #10b981' },
-            },
-            error: {
-              style: { background: '#fee2e2', color: '#7f1d1d', border: '1px solid #ef4444' },
-            },
-          }}
-        />
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          style: {
+            background: '#f0f4f8',
+            color: '#111',
+            padding: '16px',
+            border: '1px solid #3b82f6',
+            borderRadius: '8px',
+          },
+          success: {
+            style: { background: '#d1fae5', color: '#065f46', border: '1px solid #10b981' },
+          },
+          error: {
+            style: { background: '#fee2e2', color: '#7f1d1d', border: '1px solid #ef4444' },
+          },
+        }}
+      />
 
-        {/* Router */}
-        <RouterProvider router={router} />
-      </AuthProvider>
-    </QueryClientProvider>
-  </StrictMode>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  </QueryClientProvider>
 )

@@ -1,68 +1,84 @@
+// src/components/Footer.jsx
 import React from "react";
-import { FaFacebookF, FaInstagram } from "react-icons/fa";
-import { BsTwitter } from "react-icons/bs";
+import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="bg-indigo-50 text-gray-800 py-10">
-      <div className="container mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 px-6">
+    <footer className="bg-gray-900 text-gray-200 py-12 mt-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Top section */}
+        <div className="flex flex-col md:flex-row justify-between items-start gap-8">
+          {/* Logo & Description */}
+          <div className="flex flex-col items-center md:items-start text-center md:text-left">
+            <h2 className="text-3xl font-extrabold text-blue-600 mb-2">UrbanFix</h2>
+            <p className="text-sm max-w-xs">
+              Your go-to platform to report, track, and resolve city issues. Making our city better, one issue at a time!
+            </p>
+          </div>
 
-        {/* Branding */}
-        <div className="text-center lg:text-left">
-          <h2 className="text-4xl font-extrabold text-indigo-600 drop-shadow-lg">UrbanFix</h2>
-          <p className="mt-4 font-semibold text-gray-700 leading-relaxed max-w-sm mx-auto lg:mx-0">
-            Fast, trusted, and local services for your home or business — all in one place. <br />
-            <span className="text-indigo-500 font-bold">Just a click away</span>.
-          </p>
-        </div>
+          {/* Links */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 text-center md:text-left">
+            <div>
+              <h3 className="font-semibold mb-2">Company</h3>
+              <ul className="space-y-1 text-sm">
+                <li>
+                  <a href="/about-us" className="hover:text-blue-500 transition-colors">About Us</a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-blue-500 transition-colors">Careers</a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-blue-500 transition-colors">Blog</a>
+                </li>
+              </ul>
+            </div>
 
-        {/* Quick Links */}
-        <div className="text-center">
-          <h3 className="text-lg font-bold mb-3">Quick Links</h3>
-          <ul className="text-indigo-600 font-semibold space-y-2">
-            <li>
-              <a href="/" className="hover:border-b-2 inline-block transition-transform duration-300 hover:scale-105">
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="/services" className="hover:border-b-2 inline-block transition-transform duration-300 hover:scale-105">
-                Services
-              </a>
-            </li>
-            <li>
-              <a href="/contact" className="hover:border-b-2 inline-block transition-transform duration-300 hover:scale-105">
-                Contact
-              </a>
-            </li>
-          </ul>
-        </div>
+            <div>
+              <h3 className="font-semibold mb-2">Contact</h3>
+              <ul className="space-y-1 text-sm flex flex-col gap-1">
+                <li>
+                  <a href="#" className="flex items-center justify-center md:justify-start gap-2 hover:text-blue-500 transition-colors">
+                    <FaFacebookF /> Facebook
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="flex items-center justify-center md:justify-start gap-2 hover:text-blue-400 transition-colors">
+                    <FaTwitter /> Twitter
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="flex items-center justify-center md:justify-start gap-2 hover:text-pink-500 transition-colors">
+                    <FaInstagram /> Instagram
+                  </a>
+                </li>
+              </ul>
+            </div>
 
-        {/* Contact & Social */}
-        <div className="text-center lg:text-left">
-          <h3 className="text-lg font-bold mb-3">Contact</h3>
-          <p className="text-indigo-600 font-semibold">Email: support@urbanfix.com</p>
-          <p className="text-indigo-600 font-semibold">Phone: +880 1336 458100</p>
-
-          <div className="flex justify-center lg:justify-start mt-4 space-x-5">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
-              className="text-indigo-600 hover:text-indigo-800 transform hover:scale-110 transition duration-200">
-              <FaFacebookF size={28} />
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
-              className="text-pink-500 hover:text-pink-700 transform hover:scale-110 transition duration-200">
-              <FaInstagram size={28} />
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 transform hover:scale-110 transition duration-200">
-              <BsTwitter size={28} />
-            </a>
+            <div>
+              <h3 className="font-semibold mb-2">Legal</h3>
+              <ul className="space-y-1 text-sm">
+                <li>
+                  <a href="#" className="hover:text-blue-500 transition-colors">Privacy Policy</a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-blue-500 transition-colors">Terms of Service</a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-blue-500 transition-colors">Cookies</a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="mt-10 text-center text-gray-600 text-sm">
-        &copy; 2025 UrbanFix. All rights reserved.
+        {/* Divider */}
+        <div className="border-t border-gray-700 my-6"></div>
+
+        {/* Bottom section */}
+        <div className="flex flex-col md:flex-row justify-between items-center text-sm gap-2">
+          <p>&copy; 2025 UrbanFix. All rights reserved.</p>
+          <p>Designed & Developed by YourName</p>
+        </div>
       </div>
     </footer>
   );

@@ -1,48 +1,39 @@
-// src/hooks/useAxiosSecure.js
+// src/hooks/useAxiosSecure.jsx
 import axios from "axios";
-import { useEffect } from "react";
-import UseAuth from "./UseAuth";
-import { useNavigate } from "react-router-dom";
-
-const axiosSecure = axios.create({
-  baseURL: "http://localhost:3000",
-});
+import { auth } from "../firebase/firebase.init";
 
 const useAxiosSecure = () => {
-  const { user, logOut } = UseAuth();
-  const navigate = useNavigate();
+  const instance = axios.create({
+    baseURL: "http://localhost:3000",
+  });
 
-  useEffect(() => {
-    const resInterceptor = axiosSecure.interceptors.response.use(
-      (res) => res,
-      async (error) => {
-        if (error?.response?.status === 401 || error?.response?.status === 403) {
-          // invalidate session
-          try { await logOut(); } catch(e){/* ignore */ }
-          localStorage.removeItem("token");
-          navigate("/login");
-        }
-        return Promise.reject(error);
+  // Automatically attach Firebase token
+  instance.interceptors.request.use(async (config) => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const token = await user.getIdToken(); // Correct Firebase ID token
+        config.headers.Authorization = `Bearer ${token}`;
       }
-    );
+    } catch (err) {
+      console.error("Failed to get Firebase token:", err);
+    }
+    return config;
+  });
 
-    return () => axiosSecure.interceptors.response.eject(resInterceptor);
-  }, [user, logOut, navigate]);
+  // Handle global 401/403 errors
+  instance.interceptors.response.use(
+    (res) => res,
+    (err) => {
+      const status = err?.response?.status;
+      if (status === 401 || status === 403) {
+        console.warn("Unauthorized request, check Firebase token");
+      }
+      return Promise.reject(err);
+    }
+  );
 
-  useEffect(() => {
-    const reqInterceptor = axiosSecure.interceptors.request.use(
-      (config) => {
-        const token = localStorage.getItem("token");
-        if (token) config.headers.Authorization = `Bearer ${token}`;
-        return config;
-      },
-      (error) => Promise.reject(error)
-    );
-
-    return () => axiosSecure.interceptors.request.eject(reqInterceptor);
-  }, []);
-
-  return axiosSecure;
+  return instance;
 };
 
 export default useAxiosSecure;
