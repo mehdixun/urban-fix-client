@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { MdDone } from "react-icons/md";
 import { AuthContext } from "./AuthContext";
 import {
   createUserWithEmailAndPassword,
@@ -20,7 +21,6 @@ const AuthProvider = ({ children }) => {
   const axiosSecure = useAxiosSecure();
   const googleProvider = new GoogleAuthProvider();
 
-  // 🔥 Save user (CREATE / UPSERT)
   const saveUserToDB = async (firebaseUser) => {
     if (!firebaseUser?.email) return;
 
@@ -34,46 +34,41 @@ const AuthProvider = ({ children }) => {
     await axiosSecure.post("/users", userData);
   };
 
-  // ================= REGISTER =================
+  //  REGISTER 
   const registerUser = async (email, password, name, profileImgFile) => {
     setLoading(true);
     try {
-      // 1️⃣ Create user in Firebase Auth
       const res = await createUserWithEmailAndPassword(auth, email, password);
 
-      // 2️⃣ Upload profile image to imgbb (if file provided)
       let photoURL = "";
       if (profileImgFile) {
         const formData = new FormData();
         formData.append("image", profileImgFile);
-        const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host}`;
+
+        const image_API_URL = `https://api.imgbb.com/1/upload?key=${
+          import.meta.env.VITE_image_host
+        }`;
+
         const imgRes = await axios.post(image_API_URL, formData);
         photoURL = imgRes.data.data.url;
       }
 
-      // 3️⃣ Update Firebase profile
       await updateProfile(res.user, {
         displayName: name,
         photoURL,
       });
 
-      // 4️⃣ Save to backend DB
       await saveUserToDB({
         ...res.user,
         displayName: name,
         photoURL,
       });
 
-      // 5️⃣ Update local state
-      setUser({
-        ...res.user,
-        displayName: name,
-        photoURL,
-      });
+      setUser({ ...res.user, displayName: name, photoURL });
 
       Swal.fire({
         icon: "success",
-        title: "Registration Successful 🎉",
+        title: "Registration Successful",  
         timer: 1500,
         showConfirmButton: false,
       });
@@ -82,7 +77,7 @@ const AuthProvider = ({ children }) => {
     } catch (err) {
       Swal.fire({
         icon: "error",
-        title: "Registration Failed",
+        title: "Registration Failed!",
         text: err.message,
       });
       throw err;
@@ -91,40 +86,50 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // ================= LOGIN =================
+  // LOGIN
   const signInUser = async (email, password) => {
     setLoading(true);
     try {
       const res = await signInWithEmailAndPassword(auth, email, password);
       await saveUserToDB(res.user);
-      setUser(res.user);
+      setUser({ ...res.user });
       return res.user;
     } finally {
       setLoading(false);
     }
   };
 
-  // ================= GOOGLE LOGIN =================
+  //GOOGLE LOGIN
   const signInGoogle = async () => {
     setLoading(true);
     try {
       const res = await signInWithPopup(auth, googleProvider);
       await saveUserToDB(res.user);
-      setUser(res.user);
+      setUser({ ...res.user });
       return res.user;
     } finally {
       setLoading(false);
     }
   };
 
+  // LOGOUT
   const logout = async () => {
     await signOut(auth);
     setUser(null);
   };
 
+
+ const refreshUser = async () => {
+  if (auth.currentUser) {
+    await auth.currentUser.reload();
+    setUser({ ...auth.currentUser });
+  }
+};
+
+
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      setUser(currentUser ? { ...currentUser } : null);
       setLoading(false);
     });
     return () => unsub();
@@ -132,9 +137,17 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, registerUser, signInUser, signInGoogle, logout }}
+      value={{
+        user,
+        loading,
+        registerUser,
+        signInUser,
+        signInGoogle,
+        logout,
+        refreshUser,
+      }}
     >
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

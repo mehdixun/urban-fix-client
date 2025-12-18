@@ -6,9 +6,9 @@ const Footer = () => {
   return (
     <footer className="bg-gray-900 text-gray-200 py-12 mt-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Top section */}
+        {/* Top Section */}
         <div className="flex flex-col md:flex-row justify-between items-start gap-8">
-          {/* Logo & Description */}
+          {/* Branding */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <h2 className="text-3xl font-extrabold text-blue-600 mb-2">UrbanFix</h2>
             <p className="text-sm max-w-xs">
@@ -16,8 +16,8 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Links */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 text-center md:text-left">
+          {/* Links Section */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 text-center md:text-left w-full md:w-auto">
             <div>
               <h3 className="font-semibold mb-2">Company</h3>
               <ul className="space-y-1 text-sm">
@@ -74,11 +74,7 @@ const Footer = () => {
         {/* Divider */}
         <div className="border-t border-gray-700 my-6"></div>
 
-        {/* Bottom section */}
-        <div className="flex flex-col md:flex-row justify-between items-center text-sm gap-2">
-          <p>&copy; 2025 UrbanFix. All rights reserved.</p>
-          <p>Designed & Developed by YourName</p>
-        </div>
+        
       </div>
     </footer>
   );

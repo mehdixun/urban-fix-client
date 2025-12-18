@@ -1,4 +1,3 @@
-// src/components/HowItWorks.jsx
 import React from "react";
 import { Wrench, ClipboardCheck, UserCheck, Truck } from "lucide-react";
 
@@ -40,9 +39,9 @@ const HowItWorks = () => {
         {steps.map((step) => (
           <div
             key={step.id}
-            className="relative group rounded-2xl p-[1px] bg-gradient-to-r from-primary to-secondary shadow-lg hover:shadow-primary/50 transition duration-300"
+            className="relative group rounded-2xl from-primary to-secondary shadow-lg hover:shadow-primary/50 transition duration-300"
           >
-            <div className="bg-base-100 backdrop-blur-md rounded-2xl p-8 flex flex-col items-center text-center group-hover:scale-105 transition-transform duration-300 h-full relative">
+            <div className="bg-white backdrop-blur-md rounded-2xl p-8 flex flex-col items-center text-center group-hover:scale-105 transition-transform duration-300 h-full relative">
               <div className="text-primary mb-4">{step.icon}</div>
               <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
               <p className="text-sm text-gray-600">{step.desc}</p>

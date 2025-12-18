@@ -23,7 +23,7 @@ const PaymentsChart = ({ data }) => {
       {
         label: "Payment Amount ($)",
         data: data.map((d) => d.amount),
-        backgroundColor: "rgba(59,130,246,0.6)",
+        backgroundColor: "rgba(59, 130, 246, 0.7)",
       },
     ],
   };
@@ -38,12 +38,9 @@ const UserPayments = () => {
   const [loading, setLoading] = useState(true);
 
   const API_BASE = "http://localhost:3000";
-
-  // Get sessionId from URL for verification
   const params = new URLSearchParams(window.location.search);
   const sessionId = params.get("session_id");
 
-  // Fetch payments
   const fetchPayments = async () => {
     if (!user?.email) return;
     setLoading(true);
@@ -57,22 +54,21 @@ const UserPayments = () => {
     }
   };
 
-  // Verify payment on success page
   useEffect(() => {
-    if (sessionId && user?.email) {
-      const verify = async () => {
-        try {
-          await axios.post(`${API_BASE}/payments/verify`, {
-            sessionId,
-            email: user.email,
-          });
-          fetchPayments(); // reload after verification
-        } catch (err) {
-          console.error(err);
-        }
-      };
-      verify();
-    }
+    const verifyAndFetch = async () => {
+      if (!sessionId || !user?.email) return;
+      try {
+        await axios.post(`${API_BASE}/payments/verify`, {
+          sessionId,
+          email: user.email,
+        });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        fetchPayments();
+      }
+    };
+    verifyAndFetch();
   }, [sessionId, user]);
 
   useEffect(() => {
@@ -85,18 +81,15 @@ const UserPayments = () => {
       .filter((p) => (filterMethod === "All" ? true : p.method === filterMethod));
   }, [payments, filterStatus, filterMethod]);
 
-  const statusOptions = ["All", ...new Set(payments.map((p) => p.status))];
-  const methodOptions = ["All", ...new Set(payments.map((p) => p.method).filter(Boolean))];
-
   const chartData = useMemo(() => {
-    const grouped = filteredPayments.reduce((acc, p) => {
+    const grouped = {};
+    filteredPayments.forEach((p) => {
       const month = new Date(p.createdAt).toLocaleString("default", {
         month: "short",
         year: "numeric",
       });
-      acc[month] = (acc[month] || 0) + p.amount;
-      return acc;
-    }, {});
+      grouped[month] = (grouped[month] || 0) + p.amount;
+    });
     return Object.entries(grouped).map(([month, amount]) => ({ month, amount }));
   }, [filteredPayments]);
 
@@ -106,95 +99,71 @@ const UserPayments = () => {
         cost: 100,
         userEmail: user.email,
       });
-      if (res.data?.url) window.location.href = res.data.url;
+      window.location.href = res.data.url;
     } catch (err) {
       console.error(err);
-      alert("Failed to create payment session.");
     }
   };
 
-  if (!user?.email)
-    return <p className="text-center py-10 text-gray-500">Please login to see your payments.</p>;
-  if (loading)
-    return (
-      <div className="text-center py-10">
-        <span className="loading loading-spinner loading-lg"></span>
-      </div>
-    );
+  if (!user?.email) return <p className="text-center py-10">Login first</p>;
+  if (loading) return <div className="text-center py-10">Loading...</div>;
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <h2 className="text-4xl font-bold text-center mb-8 text-blue-600">My Payments</h2>
-      <div className="flex justify-center gap-4 mb-6 flex-wrap">
-        <button
-          onClick={handlePayment}
-          className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-lg shadow-lg hover:scale-105 transition"
-        >
+      <h2 className="text-3xl text-center font-bold mb-8 text-primary">My Payments</h2>
+
+      <div className="flex gap-3 justify-center mb-6 flex-wrap">
+        <button onClick={handlePayment} className="btn btn-primary">
           Pay Now
         </button>
-        <select
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-3 py-2 border rounded-lg"
-        >
-          {statusOptions.map((s) => (
-            <option key={s}>{s}</option>
-          ))}
+
+        <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="select">
+          <option>All</option>
+          <option>Paid</option>
         </select>
-        <select
-          value={filterMethod}
-          onChange={(e) => setFilterMethod(e.target.value)}
-          className="px-3 py-2 border rounded-lg"
-        >
-          {methodOptions.map((m) => (
-            <option key={m}>{m}</option>
-          ))}
+
+        <select value={filterMethod} onChange={(e) => setFilterMethod(e.target.value)} className="select">
+          <option>All</option>
+          <option>Card</option>
         </select>
       </div>
 
-      {filteredPayments.length > 0 && (
-        <div className="my-8">
-          <h3 className="text-2xl font-semibold text-center mb-4">Payments Timeline</h3>
-          <PaymentsChart data={chartData} />
-        </div>
-      )}
+      {filteredPayments.length > 0 && <PaymentsChart data={chartData} />}
 
       {filteredPayments.length === 0 ? (
-        <p className="text-center text-gray-500">No payments found 😴</p>
+        <p className="text-center mt-6">No payments yet</p>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full border rounded-lg">
-            <thead className="bg-blue-50">
-              <tr>
-                <th className="px-4 py-2">Date</th>
-                <th className="px-4 py-2">Amount</th>
-                <th className="px-4 py-2">Transaction</th>
-                <th className="px-4 py-2">Status</th>
-                <th className="px-4 py-2">Invoice</th>
+        <table className="table mt-6">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Transaction</th>
+              <th>Status</th>
+              <th>Invoice</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredPayments.map((p) => (
+              <tr key={p._id}>
+                <td>{new Date(p.createdAt).toLocaleDateString()}</td>
+                <td>${p.amount}</td>
+                <td>{p.transactionId}</td>
+                <td>
+                  <span className="badge badge-success">{p.status}</span>
+                </td>
+                <td>
+                  <PDFDownloadLink
+                    document={<InvoicePDF payment={p} />}
+                    fileName={`Invoice-${p._id}.pdf`}
+                  >
+                    Download
+                  </PDFDownloadLink>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {filteredPayments.map((p) => (
-                <tr key={p._id} className="border-t">
-                  <td className="px-4 py-2">{new Date(p.createdAt).toLocaleDateString()}</td>
-                  <td className="px-4 py-2">${p.amount}</td>
-                  <td className="px-4 py-2">{p.transactionId}</td>
-                  <td className="px-4 py-2">
-                    <span className="badge badge-success">{p.status}</span>
-                  </td>
-                  <td className="px-4 py-2">
-                    <PDFDownloadLink
-                      document={<InvoicePDF payment={p} />}
-                      fileName={`Invoice-${p._id}.pdf`}
-                    >
-                      {({ loading }) => (loading ? "Generating..." : "Download")}
-                    </PDFDownloadLink>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );

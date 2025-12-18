@@ -4,3 +4,7 @@
     --color-primary: #CAEB66;
     --color-primary: red
 };
+
+body {
+  @apply bg-base-200;
+}

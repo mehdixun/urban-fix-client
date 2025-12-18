@@ -1,4 +1,3 @@
-// src/hooks/useAxiosSecure.jsx
 import axios from "axios";
 import { auth } from "../firebase/firebase.init";
 
@@ -7,12 +6,11 @@ const useAxiosSecure = () => {
     baseURL: "http://localhost:3000",
   });
 
-  // Automatically attach Firebase token
   instance.interceptors.request.use(async (config) => {
     try {
       const user = auth.currentUser;
       if (user) {
-        const token = await user.getIdToken(); // Correct Firebase ID token
+        const token = await user.getIdToken(); 
         config.headers.Authorization = `Bearer ${token}`;
       }
     } catch (err) {
@@ -21,7 +19,6 @@ const useAxiosSecure = () => {
     return config;
   });
 
-  // Handle global 401/403 errors
   instance.interceptors.response.use(
     (res) => res,
     (err) => {

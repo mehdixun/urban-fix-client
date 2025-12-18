@@ -1,4 +1,3 @@
-// src/components/Banner.jsx
 import React from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -12,7 +11,7 @@ const Banner = () => {
     const images = [bannerImg1, bannerImg2, bannerImg3, bannerImg4];
 
     return (
-        <div className="w-full md:h-[450px] h-[250px] my-10 rounded-xl overflow-hidden shadow-lg">
+        <div className="w-full md:h-[450px] h-[250px] rounded-xl overflow-hidden shadow-lg">
             <Carousel
                 autoPlay
                 infiniteLoop
@@ -30,7 +29,6 @@ const Banner = () => {
                             alt={`Banner ${index + 1}`}
                             className="w-full h-[250px] md:h-[450px] object-cover"
                         />
-                        {/* Overlay Gradient */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
 
                         {/* Text */}

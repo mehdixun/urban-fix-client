@@ -1,4 +1,3 @@
-// src/pages/WhyChooseUs.jsx
 import React from "react";
 
 const WhyChooseUs = () => {
@@ -18,8 +17,8 @@ const WhyChooseUs = () => {
   ];
 
   return (
-    <section className="py-20 bg-base-100 px-5">
-      <h2 className="text-4xl md:text-5xl font-bold text-center mb-14">
+    <section className="py-20 bg-base-200 px-5">
+      <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-primary">
         Why Choose UrbanFix?
       </h2>
 
@@ -28,7 +27,7 @@ const WhyChooseUs = () => {
           <div
             key={index}
             className="
-              p-8 bg-base-200 rounded-2xl shadow-lg
+              p-8 bg-white rounded-2xl shadow-lg
               border border-transparent hover:border-primary
               hover:shadow-lg hover:shadow-primary/40
               transition duration-300 transform hover:-translate-y-2

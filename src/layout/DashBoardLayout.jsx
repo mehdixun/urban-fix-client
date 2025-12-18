@@ -1,4 +1,3 @@
-// src/layouts/DashBoardLayout.jsx
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import useAuth from "../hooks/UseAuth";
@@ -9,9 +8,8 @@ const DashBoardLayout = () => {
 
   if (loading) return <Loader />;
 
-  if (!user) return null; // just in case
+  if (!user) return null;
 
-  // Sidebar links for all logged-in users (citizens)
   const sidebarLinks = [
     { to: "/dashboard/my-issues", label: "My Issues" },
     { to: "/dashboard/my-payment", label: "My Payment" },
@@ -21,10 +19,8 @@ const DashBoardLayout = () => {
   return (
     <div className="drawer lg:drawer-open">
       <input id="dashboard-drawer" type="checkbox" className="drawer-toggle" />
-
-      {/* Main Content */}
       <div className="drawer-content flex flex-col min-h-screen bg-base-100">
-        <nav className="navbar bg-base-300 shadow-md px-4 lg:px-8">
+        <nav className="navbar bg-base-200 shadow-md px-4 lg:px-8">
           <div className="flex-none lg:hidden">
             <label htmlFor="dashboard-drawer" className="btn btn-square btn-ghost">
               <svg
@@ -39,7 +35,7 @@ const DashBoardLayout = () => {
               </svg>
             </label>
           </div>
-          <div className="flex-1 px-2 text-center text-2xl font-bold">My Dashboard</div>
+          <div className="flex-1 px-2 text-center text-3xl font-bold mb-8 text-primary">My Dashboard</div>
         </nav>
 
         <main className="p-6">
@@ -58,7 +54,7 @@ const DashBoardLayout = () => {
                 <NavLink
                   to={link.to}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-indigo-500 hover:text-white transition ${
+                    `flex items-center bg-gray-300 text-black gap-3 px-3 py-2 rounded-lg transition ${
                       isActive ? "bg-indigo-500 text-white" : "text-base-content"
                     }`
                   }

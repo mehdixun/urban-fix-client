@@ -1,4 +1,3 @@
-// src/pages/EditIssue.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -18,14 +17,12 @@ const EditIssue = () => {
     image: "",
   });
 
-  // ================= FETCH ISSUE =================
   useEffect(() => {
     const fetchIssue = async () => {
       try {
         const res = await axios.get(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/issue/${id}`);
         const issue = res.data;
 
-        // Check if user is owner
         if (!user || issue.postedBy !== user.email) {
           Swal.fire({
             icon: "error",
@@ -35,7 +32,6 @@ const EditIssue = () => {
           return navigate("/dashboard/my-issues");
         }
 
-        // Only allow editing pending issues
         if (issue.status !== "Pending") {
           Swal.fire({
             icon: "warning",
@@ -73,15 +69,15 @@ const EditIssue = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ================= SUBMIT EDIT =================
+  // SUBMIT EDIT 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.put(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/issue/${id}`, formData);
       Swal.fire({
         icon: "success",
-        title: "Updated ✅",
-        text: "Issue updated successfully!",
+        title: "Updated Succesfully",
+        text: "Issue updated successfully",
         timer: 2000,
         showConfirmButton: false,
       });
@@ -90,8 +86,8 @@ const EditIssue = () => {
       console.error(err);
       Swal.fire({
         icon: "error",
-        title: "Update Failed 😢",
-        text: err.response?.data?.message || err.message || "Could not update issue",
+        title: "Update Failed!",
+        text: err.response?.data?.message || err.message || "Could not update issue!",
       });
     }
   };

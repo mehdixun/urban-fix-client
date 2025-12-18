@@ -12,12 +12,11 @@ const Login = () => {
 
   const handleLogin = async (data) => {
     try {
-      // 🔹 Firebase login only
       await signInUser(data.email, data.password);
 
       Swal.fire({
         icon: "success",
-        title: "Login Successful! ✅",
+        title: "Login Successful",
         text: "Welcome back",
         timer: 2000,
         showConfirmButton: false,
@@ -28,7 +27,7 @@ const Login = () => {
       console.error("Login error:", err);
       Swal.fire({
         icon: "error",
-        title: "Login Failed 😢",
+        title: "Login Failed !",
         text: err.message || "Please try again!",
       });
     }

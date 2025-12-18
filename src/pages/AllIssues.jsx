@@ -1,9 +1,9 @@
-// src/pages/AllIssues.jsx
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/UseAuth";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import Loader from "../components/Loader";
+import { AiFillLike } from "react-icons/ai";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -22,7 +22,6 @@ const AllIssues = () => {
   const [priority, setPriority] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // ================= FETCH ISSUES =================
   const fetchIssues = useCallback(async () => {
     if (firstLoad) setLoading(true);
     try {
@@ -32,7 +31,7 @@ const AllIssues = () => {
         : [];
       setIssues(list);
     } catch (err) {
-      console.error("❌ Issue Fetch Failed:", err);
+      console.error("Issue Fetch Failed:", err);
     } finally {
       if (firstLoad) {
         setLoading(false);
@@ -45,7 +44,7 @@ const AllIssues = () => {
     if (!authLoading) fetchIssues();
   }, [authLoading, fetchIssues]);
 
-  // ================= UPVOTE =================
+  // Upvote handle
   const handleUpvote = async (issue) => {
     if (!user?.email) return navigate("/login");
     if (!issue?._id) return;
@@ -53,39 +52,36 @@ const AllIssues = () => {
 
     const alreadyUpvoted = issue.upvotedUsers?.includes(user.email);
 
-    // Optimistic UI
+    if (alreadyUpvoted) return;
+
     setIssues((prev) =>
       prev.map((i) =>
         i._id === issue._id
           ? {
               ...i,
-              upvotes: (i.upvotes || 0) + (alreadyUpvoted ? -1 : 1),
-              upvotedUsers: alreadyUpvoted
-                ? i.upvotedUsers.filter((e) => e !== user.email)
-                : [...(i.upvotedUsers || []), user.email],
+              upvotes: (i.upvotes || 0) + 1,
+              upvotedUsers: [...(i.upvotedUsers || []), user.email],
             }
           : i
       )
     );
 
     try {
-      const res = await axiosSecure.patch(
-        `/issues/toggle-upvote/${issue._id}`,
-        { email: user.email }
-      );
-      const updatedIssue = res?.data?.issue;
+      const res = await axiosSecure.put(`/issues/${issue._id}/upvote`, {
+        userEmail: user.email,
+      });
+      const updatedIssue = res?.data;
       if (updatedIssue?._id) {
         setIssues((prev) =>
           prev.map((i) => (i._id === updatedIssue._id ? updatedIssue : i))
         );
       }
     } catch (err) {
-      console.error("❌ Upvote Failed:", err);
+      console.error("Upvote Failed:", err);
       fetchIssues();
     }
   };
 
-  // ================= FILTERING =================
   const filtered = useMemo(() => {
     let data = [...issues];
 
@@ -112,7 +108,6 @@ const AllIssues = () => {
         (i) => i.priority?.toLowerCase() === priority.toLowerCase()
       );
 
-    // Sort: High priority → then upvotes
     data.sort((a, b) => {
       if (a.priority === "High" && b.priority !== "High") return -1;
       if (a.priority !== "High" && b.priority === "High") return 1;
@@ -122,7 +117,7 @@ const AllIssues = () => {
     return data;
   }, [issues, search, category, status, priority]);
 
-  // ================= PAGINATION =================
+  // Pagination
   const indexOfLast = currentPage * ITEMS_PER_PAGE;
   const indexOfFirst = indexOfLast - ITEMS_PER_PAGE;
   const currentIssues = filtered.slice(indexOfFirst, indexOfLast);
@@ -130,14 +125,12 @@ const AllIssues = () => {
 
   if (authLoading || (loading && firstLoad)) return <Loader />;
 
-  // ================= UI =================
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
       <h2 className="text-3xl font-bold text-center mb-8 text-primary">
         All Issues
       </h2>
 
-      {/* Filters */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <input
           type="text"
@@ -151,7 +144,6 @@ const AllIssues = () => {
         />
 
         <select
-          className="select select-bordered w-full"
           value={category}
           onChange={(e) => {
             setCategory(e.target.value);
@@ -166,7 +158,6 @@ const AllIssues = () => {
         </select>
 
         <select
-          className="select select-bordered w-full"
           value={status}
           onChange={(e) => {
             setStatus(e.target.value);
@@ -181,7 +172,6 @@ const AllIssues = () => {
         </select>
 
         <select
-          className="select select-bordered w-full"
           value={priority}
           onChange={(e) => {
             setPriority(e.target.value);
@@ -194,7 +184,6 @@ const AllIssues = () => {
         </select>
       </div>
 
-      {/* Issues */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {currentIssues.length ? (
           currentIssues.map((issue) => {
@@ -204,12 +193,11 @@ const AllIssues = () => {
               <div
                 key={issue._id}
                 className="
-                  group card bg-base-100 border rounded-xl overflow-hidden
+                  group card bg-white rounded-xl overflow-hidden
                   shadow-md transition-all duration-300 ease-in-out
                   hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.03]
                 "
               >
-                {/* Image */}
                 <figure className="overflow-hidden">
                   <img
                     src={
@@ -225,18 +213,13 @@ const AllIssues = () => {
                   />
                 </figure>
 
-                {/* Body */}
                 <div className="card-body">
                   <h3 className="card-title">{issue.title}</h3>
                   <p className="text-sm text-gray-500">{issue.location}</p>
 
                   <div className="flex gap-2 flex-wrap my-2">
-                    <span className="badge badge-primary">
-                      {issue.category}
-                    </span>
-                    <span className="badge badge-secondary">
-                      {issue.status}
-                    </span>
+                    <span className="badge badge-primary">{issue.category}</span>
+                    <span className="badge badge-secondary">{issue.status}</span>
                     <span
                       className={`badge ${
                         issue.priority === "High"
@@ -256,21 +239,17 @@ const AllIssues = () => {
                           ? "btn-success text-white"
                           : "btn-outline"
                       }`}
-                      disabled={
-                        user?.email &&
-                        issue.postedBy?.email === user.email
-                      }
+                      disabled={issue.postedBy?.email === user?.email}
                     >
-                      👍 {issue.upvotes || 0}
+                      <span className="text-yellow-400 text-xl">
+                        <AiFillLike />
+                      </span>{" "}
+                      {issue.upvotes || 0}
                     </button>
 
                     <Link
                       to={`/issues/${issue._id}`}
-                      className="
-                        btn btn-sm btn-primary
-                        transition-all duration-300
-                        group-hover:scale-105
-                      "
+                      className="btn btn-sm btn-primary transition-all duration-300 group-hover:scale-105"
                     >
                       View
                     </Link>
@@ -281,12 +260,11 @@ const AllIssues = () => {
           })
         ) : (
           <p className="text-center col-span-full text-gray-500">
-            No issues found 😴
+            No issues found
           </p>
         )}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center mt-10 gap-2 flex-wrap">
           {Array.from({ length: totalPages }, (_, i) => (

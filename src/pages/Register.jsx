@@ -14,7 +14,6 @@ const Register = () => {
 
   const photoFile = watch("photo");
 
-  // live image preview
   useEffect(() => {
     if (photoFile && photoFile[0]) {
       const url = URL.createObjectURL(photoFile[0]);
@@ -42,7 +41,7 @@ const Register = () => {
 
       Swal.fire({
         icon: "success",
-        title: "Registration Successful 🎉",
+        title: "Registration Successful",
         text: `Welcome, ${user.displayName || user.email}`,
         timer: 2000,
         showConfirmButton: false,
@@ -52,8 +51,8 @@ const Register = () => {
     } catch (err) {
       Swal.fire({
         icon: "error",
-        title: "Registration Failed 😢",
-        text: err.message || "Something went wrong",
+        title: "Registration Failed !",
+        text: err.message || "Something went wrong !",
       });
     }
   };
@@ -65,7 +64,6 @@ const Register = () => {
           Create an Account
         </h1>
 
-        {/* Avatar Preview */}
         <div className="flex justify-center mb-4">
           <div className="w-24 h-24 rounded-full border flex items-center justify-center bg-gray-100 overflow-hidden">
             {preview ? (

@@ -56,7 +56,9 @@ const LatestResolvedIssues = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
+    <div className="bg-base-200">
+      <div className="bg-base-200">
+      <div className="max-w-6xl mx-auto px-4 py-10">
       <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 text-primary">
         Latest Resolved Issues
       </h2>
@@ -66,12 +68,12 @@ const LatestResolvedIssues = () => {
           <div
             key={issue._id}
             className="
-              group card bg-base-100 border rounded-xl overflow-hidden
+              group card bg-white  rounded-xl overflow-hidden
               shadow-md transition-all duration-300 ease-in-out
               hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.03]
             "
           >
-            {/* IMAGE */}
+            
             <figure className="overflow-hidden">
               <img
                 src={issue.image || "https://via.placeholder.com/400x250?text=No+Image"}
@@ -83,8 +85,6 @@ const LatestResolvedIssues = () => {
                 "
               />
             </figure>
-
-            {/* BODY */}
             <div className="card-body p-4 flex flex-col">
               <h3 className="text-lg md:text-xl font-semibold mb-1">
                 {issue.title}
@@ -105,7 +105,7 @@ const LatestResolvedIssues = () => {
               </div>
 
               <p className="text-gray-500 text-sm mb-1">
-                📍 {issue.location || "Unknown"}
+                Location: {issue.location || "Unknown"}
               </p>
 
               <p className="text-gray-600 text-sm mb-4">
@@ -126,6 +126,8 @@ const LatestResolvedIssues = () => {
           </div>
         ))}
       </div>
+    </div>
+    </div>
     </div>
   );
 };

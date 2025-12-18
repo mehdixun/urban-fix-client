@@ -1,16 +1,38 @@
-# React + Vite
+# UrbanFix – Public Infrastructure Issue Reporting System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Live Site:**  
 
-Currently, two official plugins are available:
+## About the Project
+UrbanFix is a digital platform that enables citizens to report, track, and resolve city infrastructure issues such as broken streetlights, potholes, water leakage, garbage overflow, and damaged footpaths. The system ensures transparency, reduces response time, and improves city service delivery by connecting citizens, staff, and admins efficiently.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Key Features
+1. **User-Friendly Interface:** Responsive design for mobile, tablet, and desktop.  
+2. **Issue Reporting:** Citizens can submit issues with title, description, photo, location, and category.  
+ 
+3. **Upvote System:** Logged-in users can upvote issues to highlight public importance; users cannot upvote their own issues.  
+4. **Timeline Tracking:** Every issue has a timeline showing status updates, actions, and progress.  
+5. **Boost Priority Feature:** Citizens can boost issue priority after successful payment; boosted issues appear at the top.  
+8. **Premium Subscription:** Users can upgrade to premium for unlimited issue reporting.  
+9. **Payments Integration:** Stripe payment system for boosting issues and subscriptions.  
+10. **Search & Filter:** Server-side search and filtering by category, status, priority, and location.  
+11. **Dashboard Analytics:** Citizens, Staff, and Admins get stats, charts, and summaries of issues and payments.  
+12. **Sweet Alerts & Notifications:** All CRUD actions show interactive notifications for better UX.  
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Technologies Used
+- **Frontend:** React, Tailwind CSS, DaisyUI, TanStack Query  
+- **Backend:** Node.js, Express.js, MongoDB  
+- **Authentication:** Firebase Authentication  
+- **Payments:** Stripe API  
+- **Deployment:** Firebase Hosting (client) & Vercel (server)  
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Getting Started
+1. Clone the repository:  
+   ```bash
+   git clone https://github.com/yourusername/urbanfix-client.git
+   git clone https://github.com/yourusername/urbanfix-server.git

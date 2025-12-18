@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import UseAuth from "../hooks/UseAuth";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Loader from "../components/Loader";
+import { updateProfile } from "firebase/auth";
+import { auth } from "../firebase/firebase.init";
 
 const UserProfile = () => {
-  const { user } = UseAuth();
+  const { user, refreshUser } = UseAuth();
+  const [loading, setLoading] = useState(true);
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
@@ -13,65 +16,56 @@ const UserProfile = () => {
     isPremium: false,
     isBlocked: false,
   });
-  const [loading, setLoading] = useState(true);
 
   const API_BASE = "http://localhost:3000";
 
-  // ================= FETCH USER DATA =================
   useEffect(() => {
-    const fetchUserData = async () => {
-      if (!user?.email) {
-        setLoading(false);
-        return;
-      }
-      try {
-        const res = await axios.get(`${API_BASE}/users/${encodeURIComponent(user.email.toLowerCase())}`);
-        if (res.data) {
-          setUserInfo({
-            name: res.data.name || "",
-            email: res.data.email || "",
-            photoURL: res.data.photoURL || "",
-            isPremium: res.data.isPremium || false,
-            isBlocked: res.data.isBlocked || false,
-          });
-        }
-      } catch (err) {
-        console.error(err);
-        Swal.fire({
-          icon: "error",
-          title: "Failed to fetch profile",
-          text: err.response?.data?.message || err.message || "User not found",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, [user]);
-
-  // ================= UPDATE PROFILE =================
-  const handleUpdateProfile = async (e) => {
-    e.preventDefault();
     if (!user?.email) {
-      Swal.fire({ icon: "error", title: "No user logged in" });
+      setLoading(false);
       return;
     }
 
+    axios
+      .get(`${API_BASE}/users/${encodeURIComponent(user.email.toLowerCase())}`)
+      .then((res) => {
+        const data = res.data;
+        setUserInfo({
+          name: data.name || "",
+          email: data.email || "",
+          photoURL: data.photoURL || "",
+          isPremium: data.isPremium || false,
+          isBlocked: data.isBlocked || false,
+        });
+      })
+      .catch(() => {
+        Swal.fire("Error", "Failed to load profile", "error");
+      })
+      .finally(() => setLoading(false));
+  }, [user]);
+
+  // UPDATE PROFILE
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+
     try {
-      // Backend update
-      await axios.put(`${API_BASE}/users/${encodeURIComponent(user.email.toLowerCase())}`, {
-        name: userInfo.name,
+      await axios.put(
+        `${API_BASE}/users/${encodeURIComponent(user.email.toLowerCase())}`,
+        {
+          name: userInfo.name,
+          photoURL: userInfo.photoURL,
+        }
+      );
+
+      if (!auth.currentUser) {
+        throw new Error("User not authenticated");
+      }
+
+      await updateProfile(auth.currentUser, {
+        displayName: userInfo.name,
         photoURL: userInfo.photoURL,
       });
 
-      // Firebase update
-      if (user.updateProfile) {
-        await user.updateProfile({
-          displayName: userInfo.name,
-          photoURL: userInfo.photoURL,
-        });
-      }
+      await refreshUser();
 
       Swal.fire({
         icon: "success",
@@ -83,8 +77,8 @@ const UserProfile = () => {
       console.error(err);
       Swal.fire({
         icon: "error",
-        title: "Update Failed",
-        text: err.response?.data?.message || err.message || "Please try again!",
+        title: "Profile update failed",
+        text: err.message,
       });
     }
   };
@@ -93,15 +87,18 @@ const UserProfile = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h2 className="text-3xl font-bold mb-6 text-center">My Profile</h2>
+      <h2 className="text-3xl text-center font-bold mb-8 text-primary">My Profile</h2>
 
       {userInfo.isBlocked && (
         <p className="text-red-500 font-semibold mb-4 text-center">
-          Your account is blocked. Please contact support.
+          Your account is blocked. Please contact authority.
         </p>
       )}
 
-      <form onSubmit={handleUpdateProfile} className="space-y-4 bg-base-100 p-6 shadow-xl rounded-lg">
+      <form
+        onSubmit={handleUpdateProfile}
+        className="space-y-4 bg-base-100 p-6 shadow-xl rounded-lg"
+      >
         <div className="flex items-center gap-4">
           <img
             src={userInfo.photoURL || "https://via.placeholder.com/100"}
@@ -111,7 +108,9 @@ const UserProfile = () => {
           <input
             type="text"
             value={userInfo.photoURL}
-            onChange={(e) => setUserInfo({ ...userInfo, photoURL: e.target.value })}
+            onChange={(e) =>
+              setUserInfo({ ...userInfo, photoURL: e.target.value })
+            }
             placeholder="Photo URL"
             className="input input-bordered w-full"
           />
@@ -120,7 +119,9 @@ const UserProfile = () => {
         <input
           type="text"
           value={userInfo.name}
-          onChange={(e) => setUserInfo({ ...userInfo, name: e.target.value })}
+          onChange={(e) =>
+            setUserInfo({ ...userInfo, name: e.target.value })
+          }
           placeholder="Full Name"
           className="input input-bordered w-full"
           required
@@ -133,11 +134,16 @@ const UserProfile = () => {
           className="input input-bordered w-full bg-gray-200"
         />
 
-        <div className="flex justify-between text-sm text-gray-700 mt-2">
-          <p><strong>Status:</strong> {userInfo.isPremium ? "Premium" : "Free User"}</p>
+        <div className="flex justify-between text-sm text-gray-700">
+          <p>
+            <strong>Status:</strong>{" "}
+            {userInfo.isPremium ? "Premium User" : "Free User"}
+          </p>
         </div>
 
-        <button type="submit" className="btn btn-primary w-full mt-3">Update Profile</button>
+        <button type="submit" className="btn btn-primary w-full">
+          Update Profile
+        </button>
       </form>
     </div>
   );

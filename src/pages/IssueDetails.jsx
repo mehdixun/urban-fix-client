@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import UseAuth from "../hooks/UseAuth";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const IssueDetails = () => {
   const { id } = useParams();
@@ -11,7 +12,9 @@ const IssueDetails = () => {
   const [issue, setIssue] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Redirect if not logged in
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+
   useEffect(() => {
     if (!user) navigate("/login");
   }, [user, navigate]);
@@ -26,12 +29,11 @@ const IssueDetails = () => {
   useEffect(() => {
     const loadIssue = async () => {
       try {
-        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
         const res = await axios.get(`${API_URL}/issues/${id}`);
         const found = res.data;
 
         if (!found) {
-          alert("Issue not found");
+          Swal.fire({ icon: "error", title: "Issue not found" });
           navigate("/all-issues");
           return;
         }
@@ -47,22 +49,25 @@ const IssueDetails = () => {
           ];
         }
 
+
+        if (!Array.isArray(found.upvotedUsers)) found.upvotedUsers = [];
+
         setIssue(found);
         setLoading(false);
       } catch (err) {
         console.error(err);
-        alert("Issue not found");
+        Swal.fire({ icon: "error", title: "Issue not found" });
         navigate("/all-issues");
       }
     };
 
     loadIssue();
-  }, [id, navigate]);
+  }, [id, user, navigate]);
 
   if (loading)
     return (
       <div className="flex justify-center py-20 text-xl font-bold">
-        Loading... 😴
+        Loading...
       </div>
     );
 
@@ -93,7 +98,7 @@ const IssueDetails = () => {
           </div>
 
           <p className="text-gray-600 text-lg mb-4">
-            📍 <span className="font-semibold">{issue.location}</span>
+            Location: <span className="font-semibold">{issue.location}</span>
           </p>
 
           <p className="mb-4 leading-relaxed">{issue.description || "No description available."}</p>
@@ -102,10 +107,14 @@ const IssueDetails = () => {
             Posted by: <span className="font-semibold">{displayText(issue.postedBy)}</span>
           </p>
 
-          {/* TIMELINE */}
+          <div className="mb-6 flex items-center gap-3">
+            <span className="text-lg font-semibold">{issue.upvotes || 0} Upvotes</span>
+          </div>
+
+
           {issue.timeline && issue.timeline.length > 0 && (
             <div className="mt-6">
-              <h3 className="text-xl font-bold mb-4 text-primary">Issue Timeline 📝</h3>
+              <h3 className="text-xl font-bold mb-4 text-primary">Issue Timeline</h3>
               <div className="flex flex-col gap-4">
                 {issue.timeline
                   .slice()

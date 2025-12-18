@@ -1,4 +1,3 @@
-// src/pages/ErrorPage.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 import { TriangleAlert } from "lucide-react";
@@ -8,7 +7,6 @@ const ErrorPage = () => {
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-b from-base-100 to-base-300 px-4 text-center">
       
-      {/* Animated Icon */}
       <motion.div
         initial={{ scale: 0, rotate: -45, opacity: 0 }}
         animate={{ scale: 1, rotate: 0, opacity: 1 }}
@@ -18,7 +16,6 @@ const ErrorPage = () => {
         <TriangleAlert className="w-24 h-24 md:w-32 md:h-32 text-red-500 drop-shadow-xl" />
       </motion.div>
 
-      {/* Error Code */}
       <motion.h1
         initial={{ y: -40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -28,7 +25,6 @@ const ErrorPage = () => {
         404
       </motion.h1>
 
-      {/* Page Not Found */}
       <motion.h2
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -38,7 +34,6 @@ const ErrorPage = () => {
         Page Not Found
       </motion.h2>
 
-      {/* Description */}
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -48,7 +43,6 @@ const ErrorPage = () => {
         Oops! Looks like you've wandered off the map. The page might be moved, removed, or never existed.
       </motion.p>
 
-      {/* Back Home Button */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}

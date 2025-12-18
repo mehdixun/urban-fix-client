@@ -1,8 +1,6 @@
-// src/components/InvoicePDF.jsx
 import React from "react";
 import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
 
-// Styles
 const styles = StyleSheet.create({
   page: {
     padding: 30,
@@ -31,7 +29,7 @@ const styles = StyleSheet.create({
 });
 
 const InvoicePDF = ({ payment }) => {
-  if (!payment) return null; // safeguard
+  if (!payment) return null;
 
   const formattedDate = payment.date ? new Date(payment.date).toLocaleString() : "N/A";
   const formattedAmount = payment.amount ? payment.amount.toLocaleString("en-US", { style: "currency", currency: "USD" }) : "$0";

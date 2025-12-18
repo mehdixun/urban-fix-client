@@ -1,4 +1,3 @@
-// src/pages/VisionMission.jsx
 import React from "react";
 
 const VisionMission = () => {
@@ -21,11 +20,10 @@ const VisionMission = () => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-gray-100">
+    <section className="py-20 bg-base-200">
       <div className="max-w-7xl mx-auto px-6">
-        {/* Heading */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-primary">
             Our Vision & Mission
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto text-lg md:text-xl">

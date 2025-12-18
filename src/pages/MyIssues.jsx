@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import UseAuth from "../hooks/UseAuth";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const API_BASE = "http://localhost:3000";
 
@@ -16,7 +17,6 @@ const MyIssues = () => {
   if (!user)
     return <p className="text-center py-10">Please login to see your issues.</p>;
 
-  // Fetch user's own issues
   const { data: issues = [], isLoading, isError } = useQuery({
     queryKey: ["my-issues", user.email],
     enabled: !!user?.email,
@@ -26,26 +26,34 @@ const MyIssues = () => {
     },
   });
 
-  // Delete issue
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this issue?")) return;
-    try {
-      await axios.delete(`${API_BASE}/issues/${id}`, { data: { userEmail: user.email } });
-      await queryClient.invalidateQueries(["my-issues", user.email]);
-      alert("Issue deleted!");
-    } catch (err) {
-      console.error(err);
-      alert("Delete failed!");
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`${API_BASE}/issues/${id}`, { data: { userEmail: user.email } });
+        await queryClient.invalidateQueries(["my-issues", user.email]);
+        Swal.fire("Deleted!", "Your issue has been deleted.", "success");
+      } catch (err) {
+        console.error(err);
+        Swal.fire("Error!", "Failed to delete issue.", "error");
+      }
     }
   };
 
-  // Open edit modal
   const openEditModal = (issue) => {
     setEditIssueData({ ...issue });
     setEditModal(true);
   };
 
-  // Update issue
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     const { _id, title, description, category, location } = editIssueData;
@@ -60,10 +68,10 @@ const MyIssues = () => {
       await queryClient.invalidateQueries(["my-issues", user.email]);
       setEditModal(false);
       setEditIssueData(null);
-      alert("Issue updated successfully! ✅");
+      Swal.fire("Updated!", "Your issue has been updated successfully.", "success");
     } catch (err) {
       console.error(err);
-      alert("Update failed! 😢");
+      Swal.fire("Error!", "Failed to update issue.", "error");
     }
   };
 
@@ -76,7 +84,7 @@ const MyIssues = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10">
-      <h1 className="text-3xl font-bold mb-6">My Issues</h1>
+      <h1 className="text-3xl text-center font-bold mb-8 text-primary">My Issues</h1>
 
       {issues.length === 0 ? (
         <p className="text-gray-500">You haven’t posted any issues yet.</p>
@@ -134,7 +142,6 @@ const MyIssues = () => {
         </div>
       )}
 
-      {/* Edit Modal */}
       {editModal && editIssueData && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-base-100 p-6 rounded-xl w-full max-w-md shadow-xl">

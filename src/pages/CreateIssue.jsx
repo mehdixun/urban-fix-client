@@ -16,8 +16,8 @@ const CreateIssue = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Road");
   const [location, setLocation] = useState("");
-  const [image, setImage] = useState(""); // base64 string
-  const [preview, setPreview] = useState(""); // preview image
+  const [image, setImage] = useState(""); 
+  const [preview, setPreview] = useState("");
 
   const createIssueMutation = useMutation({
     mutationFn: async (newIssue) => {
@@ -28,7 +28,7 @@ const CreateIssue = () => {
       queryClient.invalidateQueries(["my-issues", user?.email]);
       Swal.fire({
         icon: "success",
-        title: "Issue Created ✅",
+        title: "Issue Created",
         text: "Your issue has been reported successfully!",
         timer: 2000,
         showConfirmButton: false,
@@ -36,23 +36,22 @@ const CreateIssue = () => {
       navigate("/dashboard/my-issues");
     },
     onError: (err) => {
-      console.error("❌ Issue Creation Failed:", err);
+      console.error(" Issue Creation Failed:", err);
       Swal.fire({
         icon: "error",
-        title: "Failed 😢",
+        title: "Failed",
         text: err.response?.data?.message || err.message || "Could not create the issue",
       });
     },
   });
 
-  // handle file upload
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      setImage(reader.result); // base64 string
+      setImage(reader.result);
       setPreview(reader.result);
     };
     reader.readAsDataURL(file);
@@ -74,7 +73,7 @@ const CreateIssue = () => {
       description,
       category,
       location,
-      image: image || "", // base64 or empty
+      image: image || "",
       postedBy: {
         email: user.email,
         name: user.displayName || "User",
@@ -99,7 +98,7 @@ const CreateIssue = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold mb-8 text-primary text-center md:text-left">
+      <h1 className="text-3xl text-center font-bold mb-8 text-primary">
         Create New Issue
       </h1>
 

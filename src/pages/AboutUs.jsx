@@ -1,4 +1,3 @@
-// src/pages/AboutUs.jsx
 import React from "react";
 import { Wrench, Shield, Users, Building2, CheckCircle, Globe } from "lucide-react";
 
