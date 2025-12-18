@@ -31,7 +31,7 @@ const AllIssues = () => {
         : [];
       setIssues(list);
     } catch (err) {
-      console.error("Issue Fetch Failed:", err);
+      console.error("Issue Fetch Failed!", err);
     } finally {
       if (firstLoad) {
         setLoading(false);

@@ -1,31 +1,18 @@
+// src/hooks/useAxiosSecure.jsx
 import axios from "axios";
-import { auth } from "../firebase/firebase.init";
 
 const useAxiosSecure = () => {
+  // Simple axios instance without Firebase token
   const instance = axios.create({
     baseURL: "https://urban-fix-server.vercel.app",
+    // Optional: timeout, headers etc.
   });
 
-  instance.interceptors.request.use(async (config) => {
-    try {
-      const user = auth.currentUser;
-      if (user) {
-        const token = await user.getIdToken(); 
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    } catch (err) {
-      console.error("Failed to get Firebase token:", err);
-    }
-    return config;
-  });
-
+  // Optional: response interceptor for logging errors
   instance.interceptors.response.use(
     (res) => res,
     (err) => {
-      const status = err?.response?.status;
-      if (status === 401 || status === 403) {
-        console.warn("Unauthorized request, check Firebase token");
-      }
+      console.error("Axios request failed:", err);
       return Promise.reject(err);
     }
   );

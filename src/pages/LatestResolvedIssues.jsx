@@ -16,7 +16,7 @@ const LatestResolvedIssues = () => {
   useEffect(() => {
     const fetchResolvedIssues = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/issues");
+        const res = await axios.get("https://urban-fix-server.vercel.app/issues");
 
         const data = Array.isArray(res.data) ? res.data : [];
 
@@ -30,7 +30,7 @@ const LatestResolvedIssues = () => {
 
         setIssues(sorted.slice(0, 6));
       } catch (err) {
-        console.error("❌ Error fetching resolved issues:", err);
+        console.error("Error fetching resolved issues:", err);
       } finally {
         setLoading(false);
       }
