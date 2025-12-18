@@ -1,4 +1,3 @@
-// src/components/Navbar.jsx
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import UseAuth from "../hooks/UseAuth";
@@ -137,7 +136,6 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Spacer for fixed navbar */}
       <div className="h-16"></div>
     </>
   );

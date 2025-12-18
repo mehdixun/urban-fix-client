@@ -79,7 +79,7 @@ const AboutUs = () => {
         </div>
       </div>
 
-      {/* Global Reach / Stats */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
         <div className="p-6 bg-base-200 rounded-xl shadow hover:shadow-lg transition">
           <Globe className="w-12 h-12 text-primary mb-3 mx-auto" />

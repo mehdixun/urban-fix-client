@@ -12,7 +12,7 @@ const IssueDetails = () => {
   const [issue, setIssue] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const API_URL = import.meta.env.VITE_API_URL || "https://urban-fix-server.vercel.app/";
+  const API_URL = import.meta.env.VITE_API_URL || "https://urban-fix-server.vercel.app";
 
 
   useEffect(() => {

@@ -5,7 +5,7 @@ import UseAuth from "../hooks/UseAuth";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const API_BASE = "http://localhost:3000";
+const API_BASE = "https://urban-fix-server.vercel.app";
 
 const MyIssues = () => {
   const { user } = UseAuth();

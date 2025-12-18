@@ -1,4 +1,3 @@
-// src/pages/Features.jsx
 import React from "react";
 import { Wrench, ShieldCheck, Clock, Users } from "lucide-react";
 

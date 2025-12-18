@@ -1,4 +1,3 @@
-// src/pages/PaymentCancel.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 import { XCircle } from "lucide-react";
@@ -8,14 +7,13 @@ const PaymentCancel = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-100 to-rose-200 px-4">
       <div className="bg-white max-w-md w-full rounded-2xl shadow-2xl p-8 text-center animate-fade-in">
 
-        {/* Icon */}
         <div className="flex justify-center mb-4">
           <XCircle className="w-20 h-20 text-red-500 animate-pulse" />
         </div>
 
         {/* Title */}
         <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Payment Cancelled ❌
+          Payment Cancelled !
         </h1>
 
         {/* Message */}

@@ -1,4 +1,3 @@
-// src/pages/SocialLogin.jsx
 import React from "react";
 import UseAuth from "../hooks/UseAuth";
 import Swal from "sweetalert2";
@@ -10,7 +9,7 @@ const SocialLogin = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      const user = await signInGoogle(); // 🔥 user direct
+      const user = await signInGoogle();
 
       Swal.fire({
         icon: "success",

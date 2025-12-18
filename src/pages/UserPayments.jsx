@@ -37,7 +37,7 @@ const UserPayments = () => {
   const [filterMethod, setFilterMethod] = useState("All");
   const [loading, setLoading] = useState(true);
 
-  const API_BASE = "http://localhost:3000";
+  const API_BASE = "https://urban-fix-server.vercel.app";
   const params = new URLSearchParams(window.location.search);
   const sessionId = params.get("session_id");
 

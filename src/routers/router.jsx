@@ -18,7 +18,6 @@ import UserPayments from "../pages/UserPayments";
 import PaymentSuccess from "../pages/PaymentSuccess";
 import PaymentCancel from "../pages/PaymentCancel";
 
-// Routes protection
 import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([

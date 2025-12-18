@@ -17,7 +17,7 @@ const UserProfile = () => {
     isBlocked: false,
   });
 
-  const API_BASE = "http://localhost:3000";
+  const API_BASE = "https://urban-fix-server.vercel.app";
 
   useEffect(() => {
     if (!user?.email) {

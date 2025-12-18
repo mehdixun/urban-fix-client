@@ -20,7 +20,7 @@ const EditIssue = () => {
   useEffect(() => {
     const fetchIssue = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/issue/${id}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL || "https://urban-fix-server.vercel.app"}/issue/${id}`);
         const issue = res.data;
 
         if (!user || issue.postedBy !== user.email) {
@@ -73,7 +73,7 @@ const EditIssue = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/issue/${id}`, formData);
+      await axios.put(`${import.meta.env.VITE_API_URL || "https://urban-fix-server.vercel.app"}/issue/${id}`, formData);
       Swal.fire({
         icon: "success",
         title: "Updated Succesfully",
