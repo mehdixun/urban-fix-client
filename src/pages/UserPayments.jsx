@@ -48,7 +48,7 @@ const UserPayments = () => {
       const res = await axios.get(`${API_BASE}/payments/${user.email}`);
       setPayments(res.data || []);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching payments:", err);
     } finally {
       setLoading(false);
     }
@@ -63,7 +63,7 @@ const UserPayments = () => {
           email: user.email,
         });
       } catch (err) {
-        console.error(err);
+        console.error("Error verifying payment:", err);
       } finally {
         fetchPayments();
       }
@@ -99,9 +99,13 @@ const UserPayments = () => {
         cost: 100,
         userEmail: user.email,
       });
-      window.location.href = res.data.url;
+      if (res.data?.url) {
+        window.location.href = res.data.url; // Redirect to Stripe Checkout
+      } else {
+        console.error("Stripe session URL not found");
+      }
     } catch (err) {
-      console.error(err);
+      console.error("Error creating checkout session:", err);
     }
   };
 
