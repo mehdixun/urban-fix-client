@@ -5,7 +5,7 @@ import useAuth from "../hooks/UseAuth";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const API_BASE = "http://localhost:3000";
+const API_BASE = "https://urban-fix-server.vercel.app";
 
 const CreateIssue = () => {
   const { user } = useAuth();

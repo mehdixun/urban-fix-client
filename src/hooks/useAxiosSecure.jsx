@@ -3,7 +3,7 @@ import { auth } from "../firebase/firebase.init";
 
 const useAxiosSecure = () => {
   const instance = axios.create({
-    baseURL: "http://localhost:3000",
+    baseURL: "https://urban-fix-server.vercel.app",
   });
 
   instance.interceptors.request.use(async (config) => {
