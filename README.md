@@ -1,6 +1,7 @@
 # UrbanFix – Public Infrastructure Issue Reporting System
 
 **Live Site:**  
+https://urban-fix.netlify.app/
 
 ## About the Project
 UrbanFix is a digital platform that enables citizens to report, track, and resolve city infrastructure issues such as broken streetlights, potholes, water leakage, garbage overflow, and damaged footpaths. The system ensures transparency, reduces response time, and improves city service delivery by connecting citizens, staff, and admins efficiently.
@@ -28,11 +29,3 @@ UrbanFix is a digital platform that enables citizens to report, track, and resol
 - **Authentication:** Firebase Authentication  
 - **Payments:** Stripe API  
 - **Deployment:** Firebase Hosting (client) & Vercel (server)  
-
----
-
-## Getting Started
-1. Clone the repository:  
-   ```bash
-   git clone https://github.com/yourusername/urbanfix-client.git
-   git clone https://github.com/yourusername/urbanfix-server.git
