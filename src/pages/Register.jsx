@@ -23,55 +23,37 @@ const Register = () => {
   }, [photoFile]);
 
   const handleRegistration = async (data) => {
-    Swal.fire({
-      title: "Creating your account...",
-      allowOutsideClick: false,
-      didOpen: () => Swal.showLoading(),
-    });
+    Swal.fire({ title: "Creating account...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
     try {
       const profileImg = data.photo?.[0] || null;
+      const user = await registerUser(data.email, data.password, data.name, profileImg);
 
-      const user = await registerUser(
-        data.email,
-        data.password,
-        data.name,
-        profileImg
-      );
-
-      Swal.fire({
-        icon: "success",
-        title: "Registration Successful",
-        text: `Welcome, ${user.displayName || user.email}`,
-        timer: 2000,
-        showConfirmButton: false,
-      });
-
+      Swal.fire({ icon: "success", title: "Registration Successful", text: `Welcome, ${user.displayName || user.email}`, timer: 2000, showConfirmButton: false });
       navigate("/dashboard");
     } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Registration Failed !",
-        text: err.message || "Something went wrong !",
-      });
+      Swal.fire({ icon: "error", title: "Registration Failed!", text: err.message || "Something went wrong!" });
     }
+  };
+
+  const handleDemoLogin = () => {
+    Swal.fire({ title: "Demo login...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    setTimeout(() => {
+      Swal.close();
+      Swal.fire({ icon: "success", title: "Logged in as Demo User!", timer: 1500, showConfirmButton: false });
+      navigate("/dashboard");
+    }, 1000);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200 px-4">
-      <div className="w-full max-w-md bg-base-100 shadow-xl p-8 rounded-2xl">
-        <h1 className="text-3xl font-bold text-center mb-6">
-          Create an Account
-        </h1>
+      <div className="w-full max-w-md bg-white shadow-xl p-8 rounded-2xl">
+        <h1 className="text-3xl font-bold text-center mb-6">Create an Account</h1>
 
         <div className="flex justify-center mb-4">
           <div className="w-24 h-24 rounded-full border flex items-center justify-center bg-gray-100 overflow-hidden">
             {preview ? (
-              <img
-                src={preview}
-                alt="preview"
-                className="w-full h-full object-cover"
-              />
+              <img src={preview} alt="preview" className="w-full h-full object-cover" />
             ) : (
               <FaUserCircle className="text-6xl text-gray-400" />
             )}
@@ -79,44 +61,17 @@ const Register = () => {
         </div>
 
         <form onSubmit={handleSubmit(handleRegistration)} className="space-y-4">
-          <input
-            type="text"
-            {...register("name")}
-            placeholder="Full Name"
-            className="input input-bordered w-full"
-            required
-          />
-          <input
-            type="email"
-            {...register("email")}
-            placeholder="Email Address"
-            className="input input-bordered w-full"
-            required
-          />
-          <input
-            type="file"
-            {...register("photo")}
-            accept="image/*"
-            className="file-input file-input-bordered w-full"
-          />
-          <input
-            type="password"
-            {...register("password")}
-            placeholder="Password"
-            className="input input-bordered w-full"
-            required
-            minLength={6}
-          />
-          <button className="btn btn-primary w-full mt-3">
-            Register
-          </button>
+          <input type="text" {...register("name")} placeholder="Full Name" className="input input-bordered w-full" required />
+          <input type="email" {...register("email")} placeholder="Email Address" className="input input-bordered w-full" required />
+          <input type="file" {...register("photo")} accept="image/*" className="file-input file-input-bordered w-full" />
+          <input type="password" {...register("password")} placeholder="Password" className="input input-bordered w-full" required minLength={6} />
+          <button className="btn btn-primary w-full mt-3">Register</button>
         </form>
 
+        <button onClick={handleDemoLogin} className="btn btn-outline btn-primary w-full mt-3 text-sm">Demo Login</button>
+
         <p className="text-center mt-4 text-gray-600">
-          Already have an account?{" "}
-          <Link to="/login" className="text-primary font-semibold hover:underline">
-            Login
-          </Link>
+          Already have an account? <Link to="/login" className="text-primary font-semibold hover:underline">Login</Link>
         </p>
 
         <p className="text-center my-4 font-semibold text-gray-500">OR</p>

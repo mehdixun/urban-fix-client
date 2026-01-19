@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import UseAuth from "../hooks/UseAuth";
 import axios from "axios";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const IssueDetails = () => {
   const { id } = useParams();
@@ -30,7 +28,9 @@ const IssueDetails = () => {
 
         if (!found) return navigate("/all-issues");
 
-        if (!found.images || found.images.length === 0) found.images = [found.image || "https://via.placeholder.com/600x350?text=No+Image"];
+        // Single image only, optimized height
+        if (!found.image) found.image = "https://via.placeholder.com/600x300?text=No+Image";
+
         if (!Array.isArray(found.upvotedUsers)) found.upvotedUsers = [];
         if (!found.timeline || found.timeline.length === 0) {
           found.timeline = [
@@ -57,17 +57,15 @@ const IssueDetails = () => {
   if (loading) return <div className="flex justify-center py-20 text-xl font-bold">Loading...</div>;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10 space-y-10">
+    <div className="max-w-4xl mx-auto px-4 py-10 space-y-10">
 
-      {/* Carousel / Media */}
+      {/* Optimized Image */}
       <div className="rounded-xl overflow-hidden shadow-lg">
-        <Carousel autoPlay infiniteLoop showThumbs={true} showStatus={false} interval={4000}>
-          {issue.images.map((img, idx) => (
-            <div key={idx}>
-              <img src={img} alt={`${issue.title} ${idx + 1}`} className="h-[400px] md:h-[500px] object-cover w-full" />
-            </div>
-          ))}
-        </Carousel>
+        <img
+          src={issue.image}
+          alt={issue.title}
+          className="w-full h-[300px] md:h-[400px] object-cover"
+        />
       </div>
 
       {/* Overview Section */}
@@ -120,21 +118,6 @@ const IssueDetails = () => {
         </div>
       )}
 
-      {/* Related Issues */}
-      {issue.relatedIssues?.length > 0 && (
-        <div>
-          <h2 className="text-2xl font-bold text-primary mb-4">Related Issues</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {issue.relatedIssues.map((rel) => (
-              <Link key={rel._id} to={`/issues/${rel._id}`} className="bg-white p-4 rounded-xl shadow-md hover:shadow-xl transition">
-                <img src={rel.image || "https://via.placeholder.com/400x250"} alt={rel.title} className="h-40 w-full object-cover rounded-md mb-2" />
-                <h3 className="font-semibold">{rel.title}</h3>
-                <p className="text-sm text-gray-500">{rel.location}</p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

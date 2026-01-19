@@ -17,7 +17,7 @@ const Login = () => {
       Swal.fire({
         icon: "success",
         title: "Login Successful",
-        text: "Welcome back",
+        text: "Welcome back!",
         timer: 2000,
         showConfirmButton: false,
       });
@@ -27,15 +27,40 @@ const Login = () => {
       console.error("Login error:", err);
       Swal.fire({
         icon: "error",
-        title: "Login Failed !",
+        title: "Login Failed!",
         text: err.message || "Please try again!",
+      });
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    try {
+      const demoEmail = "demo@user.com";
+      const demoPassword = "demo123";
+
+      await signInUser(demoEmail, demoPassword);
+
+      Swal.fire({
+        icon: "success",
+        title: "Demo Login Successful",
+        text: "Welcome, Demo User!",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+      navigate("/dashboard");
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Demo Login Failed",
+        text: err.message || "Try again later!",
       });
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200 px-4">
-      <div className="w-full max-w-md bg-base-100 shadow-xl p-8 rounded-2xl">
+      <div className="w-full max-w-md bg-white shadow-xl p-8 rounded-2xl">
         <h1 className="text-3xl font-bold text-center mb-6">Welcome Back</h1>
 
         <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
@@ -53,17 +78,35 @@ const Login = () => {
             className="input input-bordered w-full"
             required
           />
-          <div className="text-right">
-            <Link to="/forgot-password" className="text-sm text-primary hover:underline">
+
+          <div className="flex justify-between items-center">
+            <Link
+              to="/forgot-password"
+              className="text-sm text-primary hover:underline"
+            >
               Forgot Password?
             </Link>
           </div>
-          <button className="btn btn-primary w-full mt-3">Login</button>
+
+          {/* Actual Login Button */}
+          <button className="btn btn-primary w-full mt-2">Login</button>
+
+          {/* Demo Login Button */}
+          <button
+            type="button"
+            onClick={handleDemoLogin}
+            className="btn btn-outline btn-primary w-full mt-3"
+          >
+            Demo Login
+          </button>
         </form>
 
         <p className="text-center mt-4 text-gray-600">
           Don’t have an account?{" "}
-          <Link to="/register" className="text-primary underline font-semibold hover:text-primary-focus">
+          <Link
+            to="/register"
+            className="text-primary underline font-semibold hover:text-primary-focus"
+          >
             Register
           </Link>
         </p>
