@@ -2,38 +2,58 @@ import Banner from "./Banner";
 import Features from "./Features";
 import HowItWorks from "./HowItWorks";
 import LatestResolvedIssues from "./LatestResolvedIssues";
-import VisionMission from "./VisionMission ";
 import WhyChooseUs from "./WhyChooseUs";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
     <div className="w-full bg-base-200">
-      <section className="text-center py-16 px-4 rounded-b-3xl">
-        <h1 className="text-4xl md:text-5xl font-bold mb-2 text-primary drop-shadow-lg">
-          Welcome to UrbanFix
-        </h1>
-        <p className="text-gray-700 md:text-lg max-w-xl mx-auto">
-          Report issues in your city easily and track them with a smile!
-        </p>
+      {/* HERO SECTION */}
+      <section className="relative min-h-[60vh] max-h-[70vh] flex items-center justify-center text-center overflow-hidden">
+        <div className="px-4">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 drop-shadow-lg">
+            Welcome to UrbanFix
+          </h1>
+
+          <p className="max-w-2xl mx-auto text-base md:text-lg mb-8">
+            Report city issues easily, track progress transparently, and help
+            make your city cleaner, safer, and smarter.
+          </p>
+
+          {/* CTA */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/all-issues" className="btn bg-indigo-600 text-white">
+              Explore Issues
+            </Link>
+            <Link to="/create-issue" className="btn bg-indigo-600 text-white">
+              Report an Issue
+            </Link>
+          </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 animate-bounce text-white/80 text-xl">
+          ↓
+        </div>
       </section>
 
-      {/* Banner / Carousel */}
-      <section className="px-4">
+      {/* Banner / Carousel (visual flow) */}
+      <section className="px-4 -mt-12">
         <Banner />
       </section>
 
       {/* Latest Resolved Issues */}
-      <section className="py-10 px-4 bg-base-200 rounded-xl shadow-inner my-6">
+      <section className="py-10 px-4 my-6">
         <LatestResolvedIssues />
       </section>
 
-      {/* Features Section */}
+      {/* Features */}
       <section className="py-10 px-4">
         <Features />
       </section>
 
       {/* How It Works */}
-      <section className="py-10 px-4 bg-base-200 rounded-xl shadow-inner my-6">
+      <section className="py-10 px-4 my-6">
         <HowItWorks />
       </section>
 
@@ -43,8 +63,8 @@ const Home = () => {
       </section>
 
       {/* Vision & Mission */}
-      <section className="py-10 px-4 bg-base-200 rounded-xl shadow-inner my-6">
-        <VisionMission />
+      <section className="py-10 px-4 my-6">
+        
       </section>
     </div>
   );
