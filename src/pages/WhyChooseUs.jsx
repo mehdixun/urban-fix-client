@@ -18,7 +18,7 @@ const WhyChooseUs = () => {
 
   return (
     <section className="py-20 bg-base-200 px-5">
-      <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-primary">
+      <h2 className="text-4xl md:text-4xl font-bold text-center mb-16 text-primary">
         Why Choose UrbanFix?
       </h2>
 

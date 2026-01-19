@@ -12,7 +12,7 @@ const Home = () => {
       {/* HERO SECTION */}
       <section className="relative min-h-[60vh] max-h-[70vh] flex items-center justify-center text-center overflow-hidden">
         <div className="px-4">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 drop-shadow-lg">
+          <h1 className="text-4xl md:text-5xl text-primary lg:text-6xl font-bold mb-4 drop-shadow-lg">
             Welcome to UrbanFix
           </h1>
 

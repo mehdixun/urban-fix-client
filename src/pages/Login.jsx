@@ -33,29 +33,15 @@ const Login = () => {
     }
   };
 
-  const handleDemoLogin = async () => {
-    try {
-      const demoEmail = "demo@user.com";
-      const demoPassword = "demo123";
-
-      await signInUser(demoEmail, demoPassword);
-
-      Swal.fire({
-        icon: "success",
-        title: "Demo Login Successful",
-        text: "Welcome, Demo User!",
-        timer: 1500,
-        showConfirmButton: false,
-      });
-
-      navigate("/dashboard");
-    } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Demo Login Failed",
-        text: err.message || "Try again later!",
-      });
-    }
+  // Demo login just shows a success toast
+  const handleDemoLogin = () => {
+    Swal.fire({
+      icon: "success",
+      title: "Demo Login Successful",
+      text: "Welcome, Demo User!",
+      timer: 1500,
+      showConfirmButton: false,
+    });
   };
 
   return (
@@ -86,19 +72,18 @@ const Login = () => {
             >
               Forgot Password?
             </Link>
+
           </div>
 
-          {/* Actual Login Button */}
           <button className="btn btn-primary w-full mt-2">Login</button>
-
           {/* Demo Login Button */}
-          <button
-            type="button"
-            onClick={handleDemoLogin}
-            className="btn btn-outline btn-primary w-full mt-3"
-          >
-            Demo Login
-          </button>
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              className="btn btn-primary w-full"
+            >
+              Demo Login
+            </button>
         </form>
 
         <p className="text-center mt-4 text-gray-600">

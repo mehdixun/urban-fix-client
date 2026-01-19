@@ -68,7 +68,7 @@ const Register = () => {
           <button className="btn btn-primary w-full mt-3">Register</button>
         </form>
 
-        <button onClick={handleDemoLogin} className="btn btn-outline btn-primary w-full mt-3 text-sm">Demo Login</button>
+        <button onClick={handleDemoLogin} className="btn btn-primary w-full mt-3 text-sm">Demo Login</button>
 
         <p className="text-center mt-4 text-gray-600">
           Already have an account? <Link to="/login" className="text-primary font-semibold hover:underline">Login</Link>

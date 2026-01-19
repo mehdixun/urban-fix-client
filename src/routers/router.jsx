@@ -17,6 +17,8 @@ import UserProfile from "../pages/UserProfile";
 import UserPayments from "../pages/UserPayments";
 import PaymentSuccess from "../pages/PaymentSuccess";
 import PaymentCancel from "../pages/PaymentCancel";
+import Contact from "../pages/Contact";
+import Support from "../pages/Support";
 
 import PrivateRoute from "./PrivateRoute";
 
@@ -48,6 +50,14 @@ export const router = createBrowserRouter([
           
         ],
       },
+      {
+        path: "contact",
+        element: <Contact />
+      },
+      {
+        path: "support",
+        element: <Support />
+      }
     ],
   },
 ]);

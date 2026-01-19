@@ -31,7 +31,7 @@ const HowItWorks = () => {
 
   return (
     <section className="py-20 px-5 bg-base-200">
-      <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-primary">
+      <h2 className="text-4xl md:text-4xl font-bold text-center mb-16 text-primary">
         How It Works
       </h2>
 
