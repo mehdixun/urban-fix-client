@@ -57,7 +57,7 @@ const IssueDetails = () => {
   if (loading) return <div className="flex justify-center py-20 text-xl font-bold">Loading...</div>;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10 space-y-10">
+    <div className="max-w-4xl mx-auto px-4 py-10 space-y-10 bg-base-200">
 
       {/* Optimized Image */}
       <div className="rounded-xl overflow-hidden shadow-lg">

@@ -13,7 +13,6 @@ const Login = () => {
   const handleLogin = async (data) => {
     try {
       await signInUser(data.email, data.password);
-
       Swal.fire({
         icon: "success",
         title: "Login Successful",
@@ -21,10 +20,8 @@ const Login = () => {
         timer: 2000,
         showConfirmButton: false,
       });
-
       navigate("/dashboard");
     } catch (err) {
-      console.error("Login error:", err);
       Swal.fire({
         icon: "error",
         title: "Login Failed!",
@@ -33,7 +30,6 @@ const Login = () => {
     }
   };
 
-  // Demo login just shows a success toast
   const handleDemoLogin = () => {
     Swal.fire({
       icon: "success",
@@ -45,23 +41,25 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200 px-4">
-      <div className="w-full max-w-md bg-white shadow-xl p-8 rounded-2xl">
-        <h1 className="text-3xl font-bold text-center mb-6">Welcome Back</h1>
+    <div className="min-h-screen flex items-center justify-center bg-base-200 dark:bg-gray-900 px-4">
+      <div className="w-full max-w-md bg-base-200 dark:bg-gray-800 shadow-xl p-8 rounded-2xl">
+        <h1 className="text-3xl font-bold text-center mb-6 text-base-content dark:text-gray-100">
+          Welcome Back
+        </h1>
 
         <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
           <input
             type="email"
             {...register("email")}
             placeholder="Email Address"
-            className="input input-bordered w-full"
+            className="input input-bordered w-full bg-base-100 dark:bg-gray-700 text-base-content dark:text-gray-100"
             required
           />
           <input
             type="password"
             {...register("password")}
             placeholder="Password"
-            className="input input-bordered w-full"
+            className="input input-bordered w-full bg-base-100 dark:bg-gray-700 text-base-content dark:text-gray-100"
             required
           />
 
@@ -72,21 +70,20 @@ const Login = () => {
             >
               Forgot Password?
             </Link>
-
           </div>
 
           <button className="btn btn-primary w-full mt-2">Login</button>
-          {/* Demo Login Button */}
-            <button
-              type="button"
-              onClick={handleDemoLogin}
-              className="btn btn-primary w-full"
-            >
-              Demo Login
-            </button>
+
+          <button
+            type="button"
+            onClick={handleDemoLogin}
+            className="btn btn-outline btn-primary w-full mt-2"
+          >
+            Demo Login
+          </button>
         </form>
 
-        <p className="text-center mt-4 text-gray-600">
+        <p className="text-center mt-4 text-base-content dark:text-gray-200">
           Don’t have an account?{" "}
           <Link
             to="/register"
@@ -96,7 +93,9 @@ const Login = () => {
           </Link>
         </p>
 
-        <p className="text-center my-4 font-semibold text-gray-500">OR</p>
+        <p className="text-center my-4 font-semibold text-gray-500 dark:text-gray-300">
+          OR
+        </p>
         <SocialLogin />
       </div>
     </div>

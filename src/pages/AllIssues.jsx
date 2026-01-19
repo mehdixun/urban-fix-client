@@ -141,7 +141,7 @@ const AllIssues = () => {
     );
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-10">
+    <div className="max-w-7xl mx-auto px-6 py-10 bg-base-200">
       <h2 className="text-3xl font-bold text-center mb-8 text-primary">
         Explore Issues
       </h2>
@@ -228,7 +228,7 @@ const AllIssues = () => {
                   />
                 </figure>
                 <div className="card-body flex flex-col">
-                  <h3 className="card-title">{issue.title}</h3>
+                  <h3 className="card-title text-gray-800">{issue.title}</h3>
                   <p className="text-sm text-gray-500">{issue.location}</p>
                   <div className="flex gap-2 flex-wrap my-2">
                     <span className="badge badge-primary">
