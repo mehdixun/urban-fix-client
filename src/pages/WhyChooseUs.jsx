@@ -26,16 +26,12 @@ const WhyChooseUs = () => {
         {items.map((item, index) => (
           <div
             key={index}
-            className="
-              p-8 bg-white rounded-2xl shadow-lg
+            className="p-8 bg-white rounded-2xl shadow-md min-h-[280px] flex flex-col justify-start
               border border-transparent hover:border-primary
-              hover:shadow-lg hover:shadow-primary/40
-              transition duration-300 transform hover:-translate-y-2
-            "
+              hover:shadow-2xl hover:shadow-primary/30
+              transition-all duration-300 transform hover:-translate-y-2"
           >
-            <h3 className="text-2xl md:text-3xl font-semibold mb-3">
-              {item.title}
-            </h3>
+            <h3 className="text-2xl md:text-3xl font-semibold mb-4">{item.title}</h3>
             <p className="text-gray-700 text-base md:text-lg">{item.desc}</p>
           </div>
         ))}

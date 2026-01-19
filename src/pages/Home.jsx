@@ -3,6 +3,7 @@ import Features from "./Features";
 import HowItWorks from "./HowItWorks";
 import LatestResolvedIssues from "./LatestResolvedIssues";
 import WhyChooseUs from "./WhyChooseUs";
+import VisionMission from "./VisionMission"
 import { Link } from "react-router-dom";
 
 const Home = () => {
@@ -64,7 +65,7 @@ const Home = () => {
 
       {/* Vision & Mission */}
       <section className="py-10 px-4 my-6">
-        
+        <VisionMission />
       </section>
     </div>
   );
